@@ -1,0 +1,125 @@
+{
+  "roomType": "kitchen",
+  "dimensions": {
+    "width": 3,
+    "length": 4,
+    "height": 2.8
+  },
+  "specifications": {
+    "lighting": "natural",
+    "quality": "high"
+  },
+  "ceramic": {
+    "id": 7,
+    "name": "تيرازو عصري",
+    "code": "CER-007",
+    "color": "#e8e8e8",
+    "icon": "⬜"
+  },
+  "elements": [
+    {
+      "type": "wall",
+      "start": {
+        "x": 273,
+        "y": 198.84375
+      },
+      "end": {
+        "x": 273,
+        "y": 198.84375
+      },
+      "color": "#1a472a",
+      "width": 3
+    },
+    {
+      "type": "wall",
+      "start": {
+        "x": 337,
+        "y": 197.84375
+      },
+      "end": {
+        "x": 244,
+        "y": 223.84375
+      },
+      "color": "#1a472a",
+      "width": 3
+    },
+    {
+      "type": "wall",
+      "start": {
+        "x": 414,
+        "y": 175.84375
+      },
+      "end": {
+        "x": 414,
+        "y": 175.84375
+      },
+      "color": "#1a472a",
+      "width": 3
+    },
+    {
+      "type": "wall",
+      "start": {
+        "x": 298,
+        "y": 204.84375
+      },
+      "end": {
+        "x": 318,
+        "y": 258.84375
+      },
+      "color": "#1a472a",
+      "width": 3
+    },
+    {
+      "type": "wall",
+      "start": {
+        "x": 344,
+        "y": 153.84375
+      },
+      "end": {
+        "x": 308,
+        "y": 150.84375
+      },
+      "color": "#1a472a",
+      "width": 3
+    },
+    {
+      "type": "window",
+      "start": {
+        "x": 333,
+        "y": 119.84375
+      },
+      "end": {
+        "x": 333,
+        "y": 119.84375
+      },
+      "color": "#87ceeb",
+      "width": 3
+    },
+    {
+      "type": "door",
+      "start": {
+        "x": 278,
+        "y": 120.84375
+      },
+      "end": {
+        "x": 278,
+        "y": 120.84375
+      },
+      "color": "#d4a574",
+      "width": 3
+    },
+    {
+      "type": "door",
+      "start": {
+        "x": 321,
+        "y": 124.84375
+      },
+      "end": {
+        "x": 321,
+        "y": 124.84375
+      },
+      "color": "#d4a574",
+      "width": 3
+    }
+  ]
+}
