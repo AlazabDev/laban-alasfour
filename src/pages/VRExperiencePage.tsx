@@ -1,0 +1,363 @@
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { Play, Pause, RotateCcw, Maximize2, Eye, Box, Smartphone, Monitor, ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
+import { supabase } from "@/integrations/supabase/client";
+import { Link } from "react-router-dom";
+import vrExperienceImage from "@/assets/vr-experience.jpg";
+import type { Json } from "@/integrations/supabase/types";
+
+interface ProductImage {
+  url: string;
+  is_primary: boolean;
+}
+
+interface VRProduct {
+  id: string;
+  name_ar: string;
+  name_en: string;
+  price: number;
+  images: Json;
+  model_3d_url: string | null;
+  slug: string;
+}
+
+const features = [
+  {
+    icon: Eye,
+    title: "رؤية 360°",
+    description: "شاهد الأثاث من جميع الزوايا بتفاصيل عالية الدقة",
+  },
+  {
+    icon: Box,
+    title: "نماذج ثلاثية الأبعاد",
+    description: "استكشف النماذج التفاعلية للمنتجات قبل الشراء",
+  },
+  {
+    icon: Smartphone,
+    title: "تجربة الواقع المعزز",
+    description: "ضع الأثاث في غرفتك باستخدام كاميرا هاتفك",
+  },
+  {
+    icon: Monitor,
+    title: "معاينة حية",
+    description: "شاهد كيف سيبدو الأثاث في بيئتك الفعلية",
+  },
+];
+
+const steps = [
+  {
+    number: "01",
+    title: "اختر المنتج",
+    description: "تصفح كتالوج المنتجات واختر القطعة التي تريد تجربتها",
+  },
+  {
+    number: "02",
+    title: "افتح تجربة VR",
+    description: "اضغط على زر تجربة VR للدخول في العرض التفاعلي",
+  },
+  {
+    number: "03",
+    title: "استكشف وتفاعل",
+    description: "قم بتدوير المنتج، تكبيره، ومشاهدته من جميع الزوايا",
+  },
+  {
+    number: "04",
+    title: "جربه في غرفتك",
+    description: "استخدم AR لوضع المنتج في مساحتك الفعلية",
+  },
+];
+
+export default function VRExperiencePage() {
+  const [vrProducts, setVRProducts] = useState<VRProduct[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchVRProducts();
+  }, []);
+
+  const fetchVRProducts = async () => {
+    try {
+      const { data } = await supabase
+        .from("products")
+        .select("id, name_ar, name_en, price, images, model_3d_url, slug")
+        .eq("has_vr_experience", true)
+        .eq("is_active", true)
+        .limit(8);
+
+      setVRProducts(data || []);
+    } catch (error) {
+      console.error("Error fetching VR products:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getProductImage = (product: VRProduct) => {
+    if (!product.images || !Array.isArray(product.images)) return "/placeholder.svg";
+    const images = product.images as unknown as ProductImage[];
+    const primary = images.find((img) => img.is_primary);
+    return primary?.url || images[0]?.url || "/placeholder.svg";
+  };
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Header />
+
+      {/* Hero Section */}
+      <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
+        {/* Background */}
+        <div className="absolute inset-0">
+          <img
+            src={vrExperienceImage}
+            alt="VR Experience"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
+        </div>
+
+        {/* Content */}
+        <div className="relative z-10 container mx-auto px-4 text-center pt-20">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <Badge className="mb-6 bg-secondary/20 text-secondary border-secondary/30">
+              تقنية حصرية
+            </Badge>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground mb-6">
+              تجربة الواقع الافتراضي
+            </h1>
+            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-10">
+              استكشف الأثاث بتقنية ثلاثية الأبعاد متطورة واستمتع بتجربة تسوق غامرة تجعلك ترى المنتج كما لو كان أمامك
+            </p>
+
+            <div className="flex flex-wrap gap-4 justify-center">
+              <Button size="lg" className="gap-2 text-lg px-8">
+                <Play className="h-5 w-5" />
+                ابدأ التجربة
+              </Button>
+              <Button size="lg" variant="outline" className="gap-2 text-lg px-8">
+                شاهد الفيديو التعريفي
+              </Button>
+            </div>
+          </motion.div>
+
+          {/* Stats */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto"
+          >
+            {[
+              { value: "500+", label: "منتج بتقنية VR" },
+              { value: "50K+", label: "تجربة مكتملة" },
+              { value: "4.9", label: "تقييم المستخدمين" },
+              { value: "360°", label: "زاوية مشاهدة" },
+            ].map((stat, index) => (
+              <div key={index} className="bg-card/50 backdrop-blur-sm rounded-xl p-6 border border-border">
+                <div className="text-3xl md:text-4xl font-bold text-secondary mb-1">{stat.value}</div>
+                <div className="text-sm text-muted-foreground">{stat.label}</div>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Features */}
+      <section className="py-20 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              مميزات تجربة VR
+            </h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+              تقنيات متطورة لتجربة تسوق استثنائية
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {features.map((feature, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <Card className="h-full hover:border-primary/50 transition-colors">
+                  <CardContent className="p-6 text-center">
+                    <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-primary/10 flex items-center justify-center">
+                      <feature.icon className="h-8 w-8 text-primary" />
+                    </div>
+                    <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+                    <p className="text-muted-foreground">{feature.description}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              كيف تعمل التجربة؟
+            </h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+              خطوات بسيطة للاستمتاع بتجربة VR
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {steps.map((step, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className="relative"
+              >
+                <div className="text-7xl font-bold text-primary/10 absolute -top-4 right-0">
+                  {step.number}
+                </div>
+                <div className="relative pt-8">
+                  <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
+                  <p className="text-muted-foreground">{step.description}</p>
+                </div>
+                {index < steps.length - 1 && (
+                  <ChevronRight className="hidden lg:block absolute top-1/2 -left-4 h-8 w-8 text-muted-foreground/30" />
+                )}
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* VR Products */}
+      <section className="py-20 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="flex justify-between items-center mb-12"
+          >
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
+                منتجات بتجربة VR
+              </h2>
+              <p className="text-muted-foreground">
+                استكشف المنتجات التي تدعم تقنية الواقع الافتراضي
+              </p>
+            </div>
+            <Link to="/living">
+              <Button variant="outline" className="gap-2">
+                عرض الكل
+                <ChevronRight className="h-4 w-4 rotate-180" />
+              </Button>
+            </Link>
+          </motion.div>
+
+          {vrProducts.length > 0 ? (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {vrProducts.map((product, index) => (
+                <motion.div
+                  key={product.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.05 }}
+                >
+                  <Link to={`/product/${product.slug}`}>
+                    <Card className="group overflow-hidden hover:border-primary/50 transition-all duration-300">
+                      <div className="relative aspect-square overflow-hidden">
+                        <img
+                          src={getProductImage(product)}
+                          alt={product.name_ar}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        />
+                        <Badge className="absolute top-3 right-3 bg-primary text-primary-foreground gap-1">
+                          <Box className="h-3 w-3" /> VR
+                        </Badge>
+
+                        {/* VR Button Overlay */}
+                        <div className="absolute inset-0 bg-background/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                          <Button className="gap-2">
+                            <Play className="h-4 w-4" />
+                            تجربة VR
+                          </Button>
+                        </div>
+                      </div>
+                      <CardContent className="p-4">
+                        <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-1">
+                          {product.name_ar}
+                        </h3>
+                        <p className="text-primary font-bold mt-2">{product.price} ر.س</p>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12 text-muted-foreground">
+              لا توجد منتجات بتجربة VR متاحة حالياً
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="bg-gradient-to-br from-primary/10 to-secondary/10 rounded-3xl p-12 text-center border border-primary/20"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              جاهز لتجربة المستقبل؟
+            </h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto mb-8">
+              انضم إلى آلاف العملاء الذين استمتعوا بتجربة التسوق بتقنية الواقع الافتراضي
+            </p>
+            <div className="flex flex-wrap gap-4 justify-center">
+              <Link to="/living">
+                <Button size="lg" className="gap-2">
+                  تصفح المنتجات
+                </Button>
+              </Link>
+              <Button size="lg" variant="outline" className="gap-2">
+                تحميل تطبيق VR
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      <Footer />
+    </div>
+  );
+}
