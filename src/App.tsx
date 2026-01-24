@@ -11,6 +11,7 @@ import Products from "./pages/admin/Products";
 import ProductForm from "./pages/admin/ProductForm";
 import Categories from "./pages/admin/Categories";
 import ImportCSV from "./pages/admin/ImportCSV";
+import FileManager from "./pages/admin/FileManager";
 import Settings from "./pages/admin/Settings";
 
 const queryClient = new QueryClient();
@@ -29,6 +30,7 @@ const App = () => (
             <Route path="products/new" element={<ProductForm />} />
             <Route path="products/:id" element={<ProductForm />} />
             <Route path="categories" element={<Categories />} />
+            <Route path="files" element={<FileManager />} />
             <Route path="import" element={<ImportCSV />} />
             <Route path="settings" element={<Settings />} />
           </Route>

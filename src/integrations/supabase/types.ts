@@ -1317,6 +1317,72 @@ export type Database = {
           },
         ]
       }
+      uploaded_files: {
+        Row: {
+          bucket_id: string
+          category_id: string | null
+          created_at: string
+          file_name: string
+          file_path: string
+          file_size: number | null
+          file_type: string
+          id: string
+          metadata: Json | null
+          mime_type: string | null
+          original_name: string
+          product_id: string | null
+          updated_at: string
+          uploaded_by: string | null
+        }
+        Insert: {
+          bucket_id: string
+          category_id?: string | null
+          created_at?: string
+          file_name: string
+          file_path: string
+          file_size?: number | null
+          file_type: string
+          id?: string
+          metadata?: Json | null
+          mime_type?: string | null
+          original_name: string
+          product_id?: string | null
+          updated_at?: string
+          uploaded_by?: string | null
+        }
+        Update: {
+          bucket_id?: string
+          category_id?: string | null
+          created_at?: string
+          file_name?: string
+          file_path?: string
+          file_size?: number | null
+          file_type?: string
+          id?: string
+          metadata?: Json | null
+          mime_type?: string | null
+          original_name?: string
+          product_id?: string | null
+          updated_at?: string
+          uploaded_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "uploaded_files_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "uploaded_files_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       users: {
         Row: {
           created_at: string
