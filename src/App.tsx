@@ -5,6 +5,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import CategoryPage from "./pages/CategoryPage";
+import ProductDetail from "./pages/ProductDetail";
+import VRExperiencePage from "./pages/VRExperiencePage";
 import AdminLayout from "./pages/admin/AdminLayout";
 import Dashboard from "./pages/admin/Dashboard";
 import Products from "./pages/admin/Products";
@@ -24,6 +27,17 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          
+          {/* Store Pages */}
+          <Route path="/living" element={<CategoryPage />} />
+          <Route path="/bedroom" element={<CategoryPage />} />
+          <Route path="/lighting" element={<CategoryPage />} />
+          <Route path="/kitchen" element={<CategoryPage />} />
+          <Route path="/category/:category" element={<CategoryPage />} />
+          <Route path="/product/:slug" element={<ProductDetail />} />
+          <Route path="/vr" element={<VRExperiencePage />} />
+          
+          {/* Admin Pages */}
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<Dashboard />} />
             <Route path="products" element={<Products />} />
@@ -34,6 +48,7 @@ const App = () => (
             <Route path="import" element={<ImportCSV />} />
             <Route path="settings" element={<Settings />} />
           </Route>
+          
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
