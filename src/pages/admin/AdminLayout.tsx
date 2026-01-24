@@ -9,7 +9,8 @@ import {
   X, 
   Upload,
   Settings,
-  ChevronLeft
+  ChevronLeft,
+  FolderOpen
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -18,6 +19,7 @@ const sidebarLinks = [
   { icon: LayoutDashboard, label: "لوحة التحكم", href: "/admin" },
   { icon: Package, label: "المنتجات", href: "/admin/products" },
   { icon: FolderTree, label: "الفئات", href: "/admin/categories" },
+  { icon: FolderOpen, label: "إدارة الملفات", href: "/admin/files" },
   { icon: Upload, label: "استيراد CSV", href: "/admin/import" },
   { icon: Settings, label: "الإعدادات", href: "/admin/settings" },
 ];
