@@ -69,6 +69,20 @@ const products = [
 ];
 
 export function FeaturedProducts() {
+  const { addItem } = useCart();
+
+  const handleAddToCart = (product: typeof products[0]) => {
+    addItem({
+      id: String(product.id),
+      name_ar: product.name,
+      name_en: product.nameEn,
+      price: product.originalPrice ?? product.price,
+      sale_price: product.originalPrice ? product.price : null,
+      image: product.image,
+      slug: product.nameEn.toLowerCase().replace(/\s+/g, "-"),
+    });
+  };
+
   return (
     <section className="py-28 bg-muted/30" dir="rtl">
       <div className="container mx-auto px-4">
