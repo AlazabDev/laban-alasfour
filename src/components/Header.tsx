@@ -88,11 +88,13 @@ export function Header() {
             <Button variant="ghost" size="icon" className="hidden md:flex h-9 w-9 text-foreground/60 hover:text-foreground">
               <User className="h-[18px] w-[18px]" />
             </Button>
-            <Button variant="ghost" size="icon" className="relative h-9 w-9 text-foreground/60 hover:text-foreground">
+            <Button variant="ghost" size="icon" className="relative h-9 w-9 text-foreground/60 hover:text-foreground" onClick={() => setIsCartOpen(true)}>
               <ShoppingBag className="h-[18px] w-[18px]" />
-              <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-secondary text-secondary-foreground text-[10px] rounded-full flex items-center justify-center font-bold">
-                0
-              </span>
+              {itemCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-secondary text-secondary-foreground text-[10px] rounded-full flex items-center justify-center font-bold">
+                  {itemCount}
+                </span>
+              )}
             </Button>
             <Button
               variant="ghost"

@@ -175,7 +175,10 @@ export function FeaturedProducts() {
 
                 {/* Add to Cart - Bottom */}
                 <div className="absolute bottom-0 left-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">
-                  <button className="w-full py-3 bg-primary/95 backdrop-blur-sm text-primary-foreground rounded-xl flex items-center justify-center gap-2 font-medium text-sm hover:bg-primary transition-colors">
+                  <button
+                    onClick={() => handleAddToCart(product)}
+                    className="w-full py-3 bg-primary/95 backdrop-blur-sm text-primary-foreground rounded-xl flex items-center justify-center gap-2 font-medium text-sm hover:bg-primary transition-colors"
+                  >
                     <ShoppingBag className="w-4 h-4" />
                     أضف للسلة
                   </button>
