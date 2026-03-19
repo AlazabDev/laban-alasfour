@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { ArrowUpLeft } from "lucide-react";
+import { Link } from "react-router-dom";
 import bedroomImage from "@/assets/category-bedroom.jpg";
 import lightingImage from "@/assets/category-lighting.jpg";
 import livingImage from "@/assets/category-living.jpg";
@@ -13,6 +14,9 @@ const categories = [
     description: "أطقم كنب وطاولات أنيقة",
     image: livingImage,
     count: 124,
+    href: "/living",
+    span: "lg:col-span-2 lg:row-span-2",
+    height: "h-[420px] lg:h-full",
   },
   {
     id: 2,
@@ -21,6 +25,9 @@ const categories = [
     description: "سراير وخزائن فاخرة",
     image: bedroomImage,
     count: 89,
+    href: "/bedroom",
+    span: "",
+    height: "h-[280px]",
   },
   {
     id: 3,
@@ -29,6 +36,9 @@ const categories = [
     description: "ثريات ومصابيح مميزة",
     image: lightingImage,
     count: 156,
+    href: "/lighting",
+    span: "",
+    height: "h-[280px]",
   },
   {
     id: 4,
@@ -37,74 +47,87 @@ const categories = [
     description: "أثاث مطابخ عصري",
     image: kitchenImage,
     count: 67,
+    href: "/kitchen",
+    span: "lg:col-span-2",
+    height: "h-[280px]",
   },
 ];
 
 export function Categories() {
   return (
-    <section className="py-24 bg-background" dir="rtl">
+    <section className="py-28 bg-background" dir="rtl">
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14"
         >
-          <span className="text-secondary font-medium text-sm tracking-wider">تصفح حسب الفئة</span>
-          <h2 className="font-display text-4xl md:text-5xl font-bold mt-3 mb-4">
-            اختر <span className="text-gradient-gold">فئتك</span> المفضلة
-          </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
+          <div>
+            <motion.span
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="inline-block text-secondary font-medium text-xs tracking-[0.2em] uppercase mb-4"
+            >
+              — تصفح حسب الفئة
+            </motion.span>
+            <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+              اختر <span className="text-gradient-gold">فئتك</span> المفضلة
+            </h2>
+          </div>
+          <p className="text-muted-foreground max-w-md text-sm leading-relaxed">
             اكتشف تشكيلتنا الواسعة من الأثاث والإضاءة المصممة بعناية لتناسب كل مساحة في منزلك
           </p>
         </motion.div>
 
-        {/* Categories Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Bento Grid Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 lg:gap-5 auto-rows-[280px]">
           {categories.map((category, index) => (
             <motion.div
               key={category.id}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="group relative h-96 rounded-2xl overflow-hidden cursor-pointer"
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.7, delay: index * 0.1, ease: [0.25, 0.4, 0.25, 1] }}
+              className={`group relative rounded-2xl overflow-hidden cursor-pointer ${category.span} ${category.height}`}
             >
+              <Link to={category.href} className="absolute inset-0 z-10" />
+
               {/* Background Image */}
-              <motion.img
-                src={category.image}
-                alt={category.name}
-                className="absolute inset-0 w-full h-full object-cover"
-                whileHover={{ scale: 1.1 }}
-                transition={{ duration: 0.6 }}
-              />
-              
-              {/* Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-charcoal/40 to-transparent" />
-              
+              <div className="absolute inset-0 overflow-hidden">
+                <motion.img
+                  src={category.image}
+                  alt={category.name}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                />
+              </div>
+
+              {/* Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/20 to-transparent transition-opacity duration-500" />
+              <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/10 transition-colors duration-500" />
+
               {/* Content */}
-              <div className="absolute inset-0 p-6 flex flex-col justify-end">
-                <div className="transform transition-transform duration-300 group-hover:-translate-y-2">
-                  <span className="text-gold-light text-sm font-medium">
+              <div className="absolute inset-0 p-6 md:p-8 flex flex-col justify-end">
+                <div className="transform transition-all duration-500 group-hover:-translate-y-2">
+                  <span className="inline-block px-3 py-1 bg-secondary/20 backdrop-blur-sm rounded-full text-secondary text-xs font-medium mb-3">
                     {category.count} منتج
                   </span>
-                  <h3 className="font-display text-2xl font-bold text-background mt-1">
+                  <h3 className="font-display text-2xl md:text-3xl font-bold text-card mb-1.5">
                     {category.name}
                   </h3>
-                  <p className="text-background/80 text-sm mt-2">
+                  <p className="text-card/70 text-sm">
                     {category.description}
                   </p>
                 </div>
-                
+
                 {/* Arrow */}
-                <motion.div
-                  className="absolute top-6 left-6 w-12 h-12 rounded-full bg-secondary flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  whileHover={{ scale: 1.1 }}
-                >
-                  <ArrowUpLeft className="w-5 h-5 text-secondary-foreground" />
-                </motion.div>
+                <div className="absolute top-6 left-6 w-12 h-12 rounded-full bg-card/10 backdrop-blur-sm border border-card/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 group-hover:rotate-0 -rotate-45">
+                  <ArrowUpLeft className="w-5 h-5 text-card" />
+                </div>
               </div>
             </motion.div>
           ))}
