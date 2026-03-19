@@ -3,6 +3,7 @@ import { Heart, Eye, ShoppingBag, Star, View, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
+import { useCart } from "@/contexts/CartContext";
 import lampImage from "@/assets/product-lamp1.jpg";
 import chairImage from "@/assets/product-chair1.jpg";
 import tableImage from "@/assets/product-table1.jpg";
