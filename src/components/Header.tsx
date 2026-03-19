@@ -20,6 +20,7 @@ export function Header() {
   const [isArabic, setIsArabic] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
+  const { itemCount, setIsCartOpen } = useCart();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
