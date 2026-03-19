@@ -134,9 +134,17 @@ export default function ProductDetail() {
   const specifications = getSpecifications();
 
   const handleAddToCart = () => {
-    toast.success("تمت إضافة المنتج إلى السلة", {
-      description: `${product?.name_ar} × ${quantity}`,
-    });
+    if (!product) return;
+    const imgs = getImages();
+    addItem({
+      id: product.id,
+      name_ar: product.name_ar,
+      name_en: product.name_en,
+      price: product.price,
+      sale_price: product.sale_price,
+      image: imgs[0] || "/placeholder.svg",
+      slug: slug || "",
+    }, quantity);
   };
 
   if (loading) {
