@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Search, ShoppingBag, User, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useCart } from "@/contexts/CartContext";
 import logo from "@/assets/logo.png";
 
 const navLinks = [
@@ -19,6 +20,7 @@ export function Header() {
   const [isArabic, setIsArabic] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
+  const { itemCount, setIsCartOpen } = useCart();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -86,11 +88,13 @@ export function Header() {
             <Button variant="ghost" size="icon" className="hidden md:flex h-9 w-9 text-foreground/60 hover:text-foreground">
               <User className="h-[18px] w-[18px]" />
             </Button>
-            <Button variant="ghost" size="icon" className="relative h-9 w-9 text-foreground/60 hover:text-foreground">
+            <Button variant="ghost" size="icon" className="relative h-9 w-9 text-foreground/60 hover:text-foreground" onClick={() => setIsCartOpen(true)}>
               <ShoppingBag className="h-[18px] w-[18px]" />
-              <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-secondary text-secondary-foreground text-[10px] rounded-full flex items-center justify-center font-bold">
-                0
-              </span>
+              {itemCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-secondary text-secondary-foreground text-[10px] rounded-full flex items-center justify-center font-bold">
+                  {itemCount}
+                </span>
+              )}
             </Button>
             <Button
               variant="ghost"

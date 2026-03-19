@@ -24,6 +24,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useCart } from "@/contexts/CartContext";
 import type { Json } from "@/integrations/supabase/types";
 
 interface ProductImage {
@@ -62,6 +63,7 @@ interface Category {
 
 export default function ProductDetail() {
   const { slug } = useParams<{ slug: string }>();
+  const { addItem } = useCart();
   const [product, setProduct] = useState<Product | null>(null);
   const [category, setCategory] = useState<Category | null>(null);
   const [loading, setLoading] = useState(true);
@@ -132,9 +134,17 @@ export default function ProductDetail() {
   const specifications = getSpecifications();
 
   const handleAddToCart = () => {
-    toast.success("تمت إضافة المنتج إلى السلة", {
-      description: `${product?.name_ar} × ${quantity}`,
-    });
+    if (!product) return;
+    const imgs = getImages();
+    addItem({
+      id: product.id,
+      name_ar: product.name_ar,
+      name_en: product.name_en,
+      price: product.price,
+      sale_price: product.sale_price,
+      image: imgs[0] || "/placeholder.svg",
+      slug: slug || "",
+    }, quantity);
   };
 
   if (loading) {

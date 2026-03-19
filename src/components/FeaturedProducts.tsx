@@ -3,6 +3,7 @@ import { Heart, Eye, ShoppingBag, Star, View, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
+import { useCart } from "@/contexts/CartContext";
 import lampImage from "@/assets/product-lamp1.jpg";
 import chairImage from "@/assets/product-chair1.jpg";
 import tableImage from "@/assets/product-table1.jpg";
@@ -68,6 +69,20 @@ const products = [
 ];
 
 export function FeaturedProducts() {
+  const { addItem } = useCart();
+
+  const handleAddToCart = (product: typeof products[0]) => {
+    addItem({
+      id: String(product.id),
+      name_ar: product.name,
+      name_en: product.nameEn,
+      price: product.originalPrice ?? product.price,
+      sale_price: product.originalPrice ? product.price : null,
+      image: product.image,
+      slug: product.nameEn.toLowerCase().replace(/\s+/g, "-"),
+    });
+  };
+
   return (
     <section className="py-28 bg-muted/30" dir="rtl">
       <div className="container mx-auto px-4">
@@ -160,7 +175,10 @@ export function FeaturedProducts() {
 
                 {/* Add to Cart - Bottom */}
                 <div className="absolute bottom-0 left-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">
-                  <button className="w-full py-3 bg-primary/95 backdrop-blur-sm text-primary-foreground rounded-xl flex items-center justify-center gap-2 font-medium text-sm hover:bg-primary transition-colors">
+                  <button
+                    onClick={() => handleAddToCart(product)}
+                    className="w-full py-3 bg-primary/95 backdrop-blur-sm text-primary-foreground rounded-xl flex items-center justify-center gap-2 font-medium text-sm hover:bg-primary transition-colors"
+                  >
                     <ShoppingBag className="w-4 h-4" />
                     أضف للسلة
                   </button>
