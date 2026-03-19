@@ -63,6 +63,7 @@ interface Category {
 
 export default function ProductDetail() {
   const { slug } = useParams<{ slug: string }>();
+  const { addItem } = useCart();
   const [product, setProduct] = useState<Product | null>(null);
   const [category, setCategory] = useState<Category | null>(null);
   const [loading, setLoading] = useState(true);
