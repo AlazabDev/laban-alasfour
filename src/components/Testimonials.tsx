@@ -35,8 +35,7 @@ export function Testimonials() {
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
@@ -54,9 +53,8 @@ export function Testimonials() {
             <motion.div
               key={item.id}
               initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.7, delay: index * 0.1, ease: [0.25, 0.4, 0.25, 1] }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.2 + index * 0.1, ease: [0.25, 0.4, 0.25, 1] }}
               className="relative bg-card rounded-2xl p-8 border border-border/50 hover:border-secondary/20 transition-all duration-500 group"
             >
               {/* Quote icon */}
