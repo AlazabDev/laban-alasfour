@@ -67,8 +67,7 @@ export function Categories() {
           <div>
             <motion.span
               initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
               className="inline-block text-secondary font-medium text-xs tracking-[0.2em] uppercase mb-4"
             >
