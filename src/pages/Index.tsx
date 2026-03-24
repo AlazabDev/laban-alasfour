@@ -13,7 +13,6 @@ const Index = () => {
       <Header />
       <main>
         <Hero />
-        <div style={{ padding: '40px', background: 'red', color: 'white', fontSize: '24px' }}>TEST SECTION - Should be visible</div>
         <BrandBanner />
         <Categories />
         <FeaturedProducts />
