@@ -44,8 +44,8 @@ export function VRExperience() {
           >
             <motion.span
               initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
               className="inline-block text-secondary/80 font-medium text-xs tracking-[0.2em] uppercase mb-6"
             >
               — تقنية حصرية
