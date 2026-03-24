@@ -132,9 +132,8 @@ export function VRExperience() {
             {/* Floating Stats Card */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.8 }}
               className="absolute -bottom-6 -left-4 lg:-left-8 bg-card p-5 rounded-2xl shadow-elevated border border-border/50"
             >
               <div className="flex items-center gap-4">

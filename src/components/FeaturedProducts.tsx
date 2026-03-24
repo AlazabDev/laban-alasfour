@@ -120,9 +120,8 @@ export function FeaturedProducts() {
             <motion.div
               key={product.id}
               initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.7, delay: index * 0.1, ease: [0.25, 0.4, 0.25, 1] }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.2 + index * 0.1, ease: [0.25, 0.4, 0.25, 1] }}
               className="group bg-card rounded-2xl overflow-hidden border border-border/50 hover:border-secondary/30 hover:shadow-elevated transition-all duration-500"
             >
               {/* Image Container */}
