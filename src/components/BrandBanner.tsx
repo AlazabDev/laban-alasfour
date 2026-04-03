@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { Truck, ShieldCheck, RotateCcw, Headphones } from "lucide-react";
 
 const features = [
@@ -12,17 +13,20 @@ export function BrandBanner() {
     <section className="py-16 bg-muted/50 border-y border-border/30" dir="rtl">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4">
-          {features.map((feature) => (
-            <div
+          {features.map((feature, index) => (
+            <motion.div
               key={feature.title}
-              className="flex flex-col items-center text-center group"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              className="flex flex-col items-center text-center group cursor-default"
             >
-              <div className="w-12 h-12 rounded-xl bg-secondary/10 border border-secondary/15 flex items-center justify-center mb-3 group-hover:bg-secondary/20 transition-colors duration-300">
-                <feature.icon className="w-5 h-5 text-secondary" />
+              <div className="w-14 h-14 rounded-2xl bg-secondary/10 border border-secondary/15 flex items-center justify-center mb-3 group-hover:bg-secondary/20 group-hover:scale-110 transition-all duration-300">
+                <feature.icon className="w-6 h-6 text-secondary" />
               </div>
               <h4 className="font-semibold text-sm mb-1">{feature.title}</h4>
               <p className="text-xs text-muted-foreground">{feature.description}</p>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
