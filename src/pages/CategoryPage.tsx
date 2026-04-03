@@ -1,22 +1,19 @@
-import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import { Filter, Grid3X3, LayoutList, SlidersHorizontal, Star, Eye, Heart, ShoppingCart, Loader2 } from "lucide-react";
+import { useState, useEffect, useMemo } from "react";
+import { useParams, useLocation } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Grid3X3, LayoutList, SlidersHorizontal, Loader2, Search, X, ChevronDown, Package,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
-import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { ProductCard } from "@/components/ProductCard";
 import { supabase } from "@/integrations/supabase/client";
 import type { Json } from "@/integrations/supabase/types";
-
-interface ProductImage {
-  url: string;
-  is_primary: boolean;
-}
 
 interface Product {
   id: string;
@@ -49,48 +46,61 @@ const categorySlugMap: Record<string, string> = {
 
 export default function CategoryPage() {
   const { category } = useParams<{ category: string }>();
+  const location = useLocation();
   const [products, setProducts] = useState<Product[]>([]);
+  const [allCategories, setAllCategories] = useState<Category[]>([]);
   const [categoryInfo, setCategoryInfo] = useState<Category | null>(null);
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [sortBy, setSortBy] = useState("newest");
   const [priceRange, setPriceRange] = useState([0, 50000]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [filtersOpen, setFiltersOpen] = useState(false);
+
+  // Derive slug from path or param
+  const currentSlug = useMemo(() => {
+    const path = location.pathname.replace("/", "");
+    if (categorySlugMap[path]) return path;
+    return category || "";
+  }, [location.pathname, category]);
 
   useEffect(() => {
     fetchData();
-  }, [category]);
+  }, [currentSlug]);
 
   const fetchData = async () => {
     setLoading(true);
     try {
-      // Find category by slug
-      const arabicSlug = category ? categorySlugMap[category] || category : "";
-      
+      // Fetch categories
+      const { data: cats } = await supabase
+        .from("categories")
+        .select("id, name_ar, name_en, slug, description_ar, image_url")
+        .eq("is_active", true)
+        .order("sort_order");
+      setAllCategories(cats || []);
+
+      const arabicSlug = currentSlug ? categorySlugMap[currentSlug] || currentSlug : "";
+
       const { data: catData } = await supabase
         .from("categories")
         .select("*")
-        .or(`slug.eq.${category},slug.eq.${arabicSlug}`)
+        .or(`slug.eq.${currentSlug},slug.eq.${arabicSlug}`)
         .single();
 
       if (catData) {
         setCategoryInfo(catData);
-
-        // Fetch products for this category
         const { data: productsData } = await supabase
           .from("products")
           .select("id, name_ar, name_en, price, sale_price, images, rating_average, is_new, has_vr_experience, slug")
           .eq("category_id", catData.id)
           .eq("is_active", true);
-
         setProducts(productsData || []);
       } else {
-        // Fetch all products if no category
+        setCategoryInfo(null);
         const { data: productsData } = await supabase
           .from("products")
           .select("id, name_ar, name_en, price, sale_price, images, rating_average, is_new, has_vr_experience, slug")
           .eq("is_active", true);
-
         setProducts(productsData || []);
       }
     } catch (error) {
@@ -100,103 +110,198 @@ export default function CategoryPage() {
     }
   };
 
-  const getProductImage = (product: Product) => {
-    if (!product.images || !Array.isArray(product.images)) return "/placeholder.svg";
-    const images = product.images as unknown as ProductImage[];
-    const primaryImage = images.find((img) => img.is_primary);
-    return primaryImage?.url || images[0]?.url || "/placeholder.svg";
-  };
+  const filteredProducts = useMemo(() => {
+    return products
+      .filter((p) => {
+        const matchesSearch =
+          p.name_ar.includes(searchQuery) ||
+          p.name_en.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesPrice = p.price >= priceRange[0] && p.price <= priceRange[1];
+        return matchesSearch && matchesPrice;
+      })
+      .sort((a, b) => {
+        switch (sortBy) {
+          case "price-asc": return a.price - b.price;
+          case "price-desc": return b.price - a.price;
+          case "rating": return (b.rating_average || 0) - (a.rating_average || 0);
+          default: return 0;
+        }
+      });
+  }, [products, searchQuery, priceRange, sortBy]);
 
-  const filteredProducts = products
-    .filter((p) => {
-      const matchesSearch = p.name_ar.includes(searchQuery) || p.name_en.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesPrice = p.price >= priceRange[0] && p.price <= priceRange[1];
-      return matchesSearch && matchesPrice;
-    })
-    .sort((a, b) => {
-      switch (sortBy) {
-        case "price-asc":
-          return a.price - b.price;
-        case "price-desc":
-          return b.price - a.price;
-        case "rating":
-          return (b.rating_average || 0) - (a.rating_average || 0);
-        default:
-          return 0;
-      }
-    });
-
-  const categoryTitle = categoryInfo?.name_ar || getCategoryTitle(category || "");
+  const categoryTitle = categoryInfo?.name_ar || getCategoryTitle(currentSlug);
+  const activeFilters = (searchQuery ? 1 : 0) + (priceRange[0] > 0 || priceRange[1] < 50000 ? 1 : 0);
 
   return (
     <div className="min-h-screen bg-background">
       <Header />
 
-      {/* Hero Section */}
-      <section className="pt-24 pb-12 bg-gradient-to-b from-primary/5 to-background">
-        <div className="container mx-auto px-4">
+      {/* Premium Hero */}
+      <section className="relative pt-20 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-primary via-primary/95 to-primary/80" />
+        <div className="absolute inset-0 opacity-10" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+        }} />
+
+        <div className="relative container mx-auto px-4 py-16 md:py-24">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center"
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            className="text-center max-w-3xl mx-auto"
           >
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+            {/* Decorative Line */}
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ delay: 0.3, duration: 0.6 }}
+              className="w-16 h-0.5 bg-secondary mx-auto mb-6"
+            />
+
+            <h1 className="font-display text-4xl md:text-6xl font-bold text-primary-foreground mb-4 leading-tight">
               {categoryTitle}
             </h1>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              {categoryInfo?.description_ar || "اكتشف مجموعتنا المميزة من الأثاث الفاخر"}
+            <p className="text-primary-foreground/70 text-lg md:text-xl max-w-xl mx-auto leading-relaxed">
+              {categoryInfo?.description_ar || "اكتشف مجموعتنا الحصرية من الأثاث الفاخر والتصاميم العصرية"}
             </p>
+
+            {/* Product Count */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              className="mt-8 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary-foreground/10 backdrop-blur-sm border border-primary-foreground/10"
+            >
+              <Package className="h-4 w-4 text-secondary" />
+              <span className="text-primary-foreground/80 text-sm">
+                {loading ? "..." : `${filteredProducts.length} منتج متاح`}
+              </span>
+            </motion.div>
           </motion.div>
+        </div>
+
+        {/* Bottom Curve */}
+        <div className="absolute bottom-0 left-0 right-0">
+          <svg viewBox="0 0 1440 60" fill="none" className="w-full">
+            <path d="M0 60L1440 60L1440 0C1440 0 1080 60 720 60C360 60 0 0 0 0L0 60Z" fill="hsl(var(--background))" />
+          </svg>
         </div>
       </section>
 
-      {/* Filters & Products */}
-      <section className="py-8">
+      {/* Main Content */}
+      <section className="py-8 md:py-12">
         <div className="container mx-auto px-4">
           {/* Toolbar */}
-          <div className="flex flex-wrap items-center justify-between gap-4 mb-8 p-4 bg-card rounded-xl border border-border">
-            <div className="flex items-center gap-4">
-              <Sheet>
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="flex flex-wrap items-center justify-between gap-3 mb-8 p-3 md:p-4 bg-card rounded-2xl border border-border/50 shadow-sm"
+          >
+            {/* Left: Filters & Search */}
+            <div className="flex items-center gap-2 flex-1 min-w-0">
+              <Sheet open={filtersOpen} onOpenChange={setFiltersOpen}>
                 <SheetTrigger asChild>
-                  <Button variant="outline" className="gap-2">
+                  <Button variant="outline" className="gap-2 rounded-xl relative shrink-0">
                     <SlidersHorizontal className="h-4 w-4" />
                     <span className="hidden sm:inline">الفلاتر</span>
+                    {activeFilters > 0 && (
+                      <span className="absolute -top-1.5 -right-1.5 h-5 w-5 rounded-full bg-secondary text-secondary-foreground text-[10px] font-bold flex items-center justify-center">
+                        {activeFilters}
+                      </span>
+                    )}
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="right" className="w-80">
+                <SheetContent side="right" className="w-80 sm:w-96">
                   <SheetHeader>
-                    <SheetTitle>تصفية المنتجات</SheetTitle>
+                    <SheetTitle className="font-display text-xl">تصفية المنتجات</SheetTitle>
                   </SheetHeader>
-                  <div className="mt-6 space-y-6">
+                  <div className="mt-8 space-y-8">
+                    {/* Price Range */}
                     <div>
-                      <label className="text-sm font-medium mb-3 block">نطاق السعر</label>
+                      <label className="text-sm font-semibold mb-4 block text-foreground">نطاق السعر</label>
                       <Slider
                         value={priceRange}
                         onValueChange={setPriceRange}
                         max={50000}
                         step={500}
-                        className="mt-2"
+                        className="mt-3"
                       />
-                      <div className="flex justify-between mt-2 text-sm text-muted-foreground">
-                        <span>{priceRange[0]} ر.س</span>
-                        <span>{priceRange[1]} ر.س</span>
+                      <div className="flex justify-between mt-3">
+                        <span className="text-sm font-medium px-3 py-1.5 rounded-lg bg-muted text-muted-foreground">
+                          {priceRange[0].toLocaleString()} ر.س
+                        </span>
+                        <span className="text-sm font-medium px-3 py-1.5 rounded-lg bg-muted text-muted-foreground">
+                          {priceRange[1].toLocaleString()} ر.س
+                        </span>
                       </div>
                     </div>
+
+                    {/* Sort in filter panel for mobile */}
+                    <div>
+                      <label className="text-sm font-semibold mb-4 block text-foreground">الترتيب</label>
+                      <div className="grid grid-cols-2 gap-2">
+                        {[
+                          { value: "newest", label: "الأحدث" },
+                          { value: "price-asc", label: "الأقل سعراً" },
+                          { value: "price-desc", label: "الأعلى سعراً" },
+                          { value: "rating", label: "الأعلى تقييماً" },
+                        ].map((opt) => (
+                          <button
+                            key={opt.value}
+                            onClick={() => setSortBy(opt.value)}
+                            className={`px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 border ${
+                              sortBy === opt.value
+                                ? "bg-primary text-primary-foreground border-primary"
+                                : "bg-card border-border hover:border-secondary/50 text-foreground"
+                            }`}
+                          >
+                            {opt.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Reset */}
+                    <Button
+                      variant="outline"
+                      className="w-full rounded-xl"
+                      onClick={() => {
+                        setPriceRange([0, 50000]);
+                        setSearchQuery("");
+                        setSortBy("newest");
+                      }}
+                    >
+                      إعادة تعيين الكل
+                    </Button>
                   </div>
                 </SheetContent>
               </Sheet>
 
-              <Input
-                placeholder="ابحث عن منتج..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-48 md:w-64"
-              />
+              {/* Search */}
+              <div className="relative flex-1 max-w-xs">
+                <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                <Input
+                  placeholder="ابحث عن منتج..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pr-9 rounded-xl border-border/50 bg-muted/50 focus:bg-card"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery("")}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground hover:text-foreground"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
             </div>
 
-            <div className="flex items-center gap-4">
+            {/* Right: Sort & View Toggle */}
+            <div className="flex items-center gap-2">
               <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-40">
+                <SelectTrigger className="w-36 rounded-xl border-border/50 hidden md:flex">
                   <SelectValue placeholder="ترتيب حسب" />
                 </SelectTrigger>
                 <SelectContent>
@@ -207,10 +312,11 @@ export default function CategoryPage() {
                 </SelectContent>
               </Select>
 
-              <div className="flex border border-border rounded-lg overflow-hidden">
+              <div className="flex rounded-xl border border-border/50 overflow-hidden">
                 <Button
                   variant={viewMode === "grid" ? "secondary" : "ghost"}
                   size="icon"
+                  className="rounded-none h-9 w-9"
                   onClick={() => setViewMode("grid")}
                 >
                   <Grid3X3 className="h-4 w-4" />
@@ -218,112 +324,72 @@ export default function CategoryPage() {
                 <Button
                   variant={viewMode === "list" ? "secondary" : "ghost"}
                   size="icon"
+                  className="rounded-none h-9 w-9"
                   onClick={() => setViewMode("list")}
                 >
                   <LayoutList className="h-4 w-4" />
                 </Button>
               </div>
             </div>
-          </div>
+          </motion.div>
 
-          {/* Products Grid */}
+          {/* Products */}
           {loading ? (
-            <div className="flex items-center justify-center py-20">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <div className="flex flex-col items-center justify-center py-32 gap-4">
+              <div className="relative">
+                <div className="h-16 w-16 rounded-full border-4 border-muted" />
+                <div className="absolute inset-0 h-16 w-16 rounded-full border-4 border-secondary border-t-transparent animate-spin" />
+              </div>
+              <p className="text-muted-foreground text-sm">جاري تحميل المنتجات...</p>
             </div>
           ) : filteredProducts.length === 0 ? (
-            <div className="text-center py-20">
-              <p className="text-muted-foreground text-lg">لا توجد منتجات متاحة حالياً</p>
-            </div>
-          ) : (
-            <div
-              className={
-                viewMode === "grid"
-                  ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-                  : "space-y-4"
-              }
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="text-center py-32"
             >
-              {filteredProducts.map((product, index) => (
-                <motion.div
-                  key={product.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                >
-                  <Link to={`/product/${product.slug}`}>
-                    <div
-                      className={`group bg-card rounded-2xl overflow-hidden border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-xl ${
-                        viewMode === "list" ? "flex" : ""
-                      }`}
-                    >
-                      {/* Image */}
-                      <div className={`relative overflow-hidden ${viewMode === "list" ? "w-48 h-48" : "aspect-square"}`}>
-                        <img
-                          src={getProductImage(product)}
-                          alt={product.name_ar}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                        />
-
-                        {/* Badges */}
-                        <div className="absolute top-3 right-3 flex flex-col gap-2">
-                          {product.is_new && (
-                            <Badge className="bg-secondary text-secondary-foreground">جديد</Badge>
-                          )}
-                          {product.has_vr_experience && (
-                            <Badge variant="outline" className="bg-background/80 backdrop-blur-sm">
-                              VR
-                            </Badge>
-                          )}
-                          {product.sale_price && (
-                            <Badge className="bg-destructive text-destructive-foreground">
-                              خصم {Math.round(((product.price - product.sale_price) / product.price) * 100)}%
-                            </Badge>
-                          )}
-                        </div>
-
-                        {/* Quick Actions */}
-                        <div className="absolute bottom-3 left-3 right-3 flex justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <Button size="icon" variant="secondary" className="h-10 w-10 rounded-full">
-                            <Heart className="h-4 w-4" />
-                          </Button>
-                          <Button size="icon" variant="secondary" className="h-10 w-10 rounded-full">
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                          <Button size="icon" className="h-10 w-10 rounded-full">
-                            <ShoppingCart className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-
-                      {/* Content */}
-                      <div className={`p-4 ${viewMode === "list" ? "flex-1 flex flex-col justify-center" : ""}`}>
-                        <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-2">
-                          {product.name_ar}
-                        </h3>
-
-                        {product.rating_average && (
-                          <div className="flex items-center gap-1 mt-2">
-                            <Star className="h-4 w-4 fill-secondary text-secondary" />
-                            <span className="text-sm text-muted-foreground">{product.rating_average.toFixed(1)}</span>
-                          </div>
-                        )}
-
-                        <div className="mt-3 flex items-center gap-2">
-                          {product.sale_price ? (
-                            <>
-                              <span className="text-lg font-bold text-primary">{product.sale_price} ر.س</span>
-                              <span className="text-sm text-muted-foreground line-through">{product.price} ر.س</span>
-                            </>
-                          ) : (
-                            <span className="text-lg font-bold text-primary">{product.price} ر.س</span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
-                </motion.div>
-              ))}
-            </div>
+              <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mx-auto mb-6">
+                <Package className="h-8 w-8 text-muted-foreground" />
+              </div>
+              <h3 className="text-xl font-display font-semibold text-foreground mb-2">لا توجد منتجات</h3>
+              <p className="text-muted-foreground max-w-md mx-auto">
+                لم نتمكن من العثور على منتجات تطابق معايير البحث الخاصة بك. جرّب تعديل الفلاتر.
+              </p>
+              <Button
+                variant="outline"
+                className="mt-6 rounded-xl"
+                onClick={() => {
+                  setSearchQuery("");
+                  setPriceRange([0, 50000]);
+                }}
+              >
+                إعادة تعيين الفلاتر
+              </Button>
+            </motion.div>
+          ) : (
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={viewMode}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className={
+                  viewMode === "grid"
+                    ? "grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6"
+                    : "space-y-4"
+                }
+              >
+                {filteredProducts.map((product, index) => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    index={index}
+                    viewMode={viewMode}
+                  />
+                ))}
+              </motion.div>
+            </AnimatePresence>
           )}
         </div>
       </section>
