@@ -50,10 +50,12 @@ export function ProductCard({ product, index, viewMode }: ProductCardProps) {
     e.stopPropagation();
     addItem({
       id: product.id,
-      name: product.name_ar,
-      price: product.sale_price || product.price,
+      name_ar: product.name_ar,
+      name_en: product.name_en,
+      price: product.price,
+      sale_price: product.sale_price,
       image: getProductImage(),
-      quantity: 1,
+      slug: product.slug,
     });
   };
 
