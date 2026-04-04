@@ -16,6 +16,8 @@ import {
   Play,
   Loader2,
   Check,
+  Eye,
+  Package,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -70,6 +72,7 @@ export default function ProductDetail() {
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   useEffect(() => {
     fetchProduct();
@@ -85,7 +88,6 @@ export default function ProductDetail() {
         .single();
 
       if (error) throw error;
-
       setProduct(data);
 
       if (data.category_id) {
@@ -145,6 +147,7 @@ export default function ProductDetail() {
       image: imgs[0] || "/placeholder.svg",
       slug: slug || "",
     }, quantity);
+    toast.success("تمت الإضافة إلى السلة");
   };
 
   if (loading) {
@@ -152,7 +155,10 @@ export default function ProductDetail() {
       <div className="min-h-screen bg-background">
         <Header />
         <div className="flex items-center justify-center py-40">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <div className="flex flex-col items-center gap-4">
+            <Loader2 className="h-8 w-8 animate-spin text-secondary" />
+            <span className="text-sm text-muted-foreground">جاري تحميل المنتج...</span>
+          </div>
         </div>
         <Footer />
       </div>
@@ -163,10 +169,14 @@ export default function ProductDetail() {
     return (
       <div className="min-h-screen bg-background">
         <Header />
-        <div className="flex flex-col items-center justify-center py-40">
-          <h1 className="text-2xl font-bold mb-4">المنتج غير موجود</h1>
+        <div className="flex flex-col items-center justify-center py-40 px-4">
+          <div className="w-20 h-20 rounded-2xl bg-muted flex items-center justify-center mb-6">
+            <Package className="w-8 h-8 text-muted-foreground" />
+          </div>
+          <h1 className="text-2xl font-bold mb-3 font-display">المنتج غير موجود</h1>
+          <p className="text-muted-foreground mb-6">عذراً، لم نتمكن من العثور على هذا المنتج</p>
           <Link to="/">
-            <Button>العودة للرئيسية</Button>
+            <Button variant="hero">العودة للرئيسية</Button>
           </Link>
         </div>
         <Footer />
@@ -174,72 +184,97 @@ export default function ProductDetail() {
     );
   }
 
+  const discountPercent = product.sale_price
+    ? Math.round(((product.price - product.sale_price) / product.price) * 100)
+    : 0;
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
 
-      <main className="pt-24 pb-16">
+      <main className="pt-8 pb-16" dir="rtl">
         <div className="container mx-auto px-4">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
-            <Link to="/" className="hover:text-foreground">الرئيسية</Link>
-            <ChevronLeft className="h-4 w-4" />
+            <Link to="/" className="hover:text-secondary transition-colors">الرئيسية</Link>
+            <ChevronLeft className="h-3.5 w-3.5" />
             {category && (
               <>
-                <Link to={`/${category.slug}`} className="hover:text-foreground">{category.name_ar}</Link>
-                <ChevronLeft className="h-4 w-4" />
+                <Link to={`/category/${category.slug}`} className="hover:text-secondary transition-colors">{category.name_ar}</Link>
+                <ChevronLeft className="h-3.5 w-3.5" />
               </>
             )}
-            <span className="text-foreground">{product.name_ar}</span>
+            <span className="text-foreground font-medium">{product.name_ar}</span>
           </nav>
 
-          <div className="grid lg:grid-cols-2 gap-12">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
             {/* Images Section */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
               className="space-y-4"
             >
               {/* Main Image */}
-              <div className="relative aspect-square rounded-2xl overflow-hidden bg-muted">
-                <img
+              <div className="relative aspect-[4/5] rounded-2xl overflow-hidden bg-muted border border-border/50 group">
+                {!imageLoaded && (
+                  <div className="absolute inset-0 animate-pulse bg-muted" />
+                )}
+                <motion.img
+                  key={selectedImage}
                   src={images[selectedImage]}
                   alt={product.name_ar}
                   className="w-full h-full object-cover"
+                  initial={{ opacity: 0, scale: 1.05 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.4 }}
+                  onLoad={() => setImageLoaded(true)}
                 />
+
+                {/* Top badges */}
+                <div className="absolute top-4 right-4 flex flex-col gap-2">
+                  {product.is_new && (
+                    <Badge className="bg-secondary text-secondary-foreground shadow-gold text-xs px-3">
+                      جديد
+                    </Badge>
+                  )}
+                  {discountPercent > 0 && (
+                    <Badge className="bg-destructive text-destructive-foreground text-xs px-3">
+                      خصم {discountPercent}%
+                    </Badge>
+                  )}
+                  {product.has_vr_experience && (
+                    <Badge className="bg-primary text-primary-foreground text-xs px-3 gap-1">
+                      <Play className="h-3 w-3" /> VR
+                    </Badge>
+                  )}
+                </div>
 
                 {/* Navigation Arrows */}
                 {images.length > 1 && (
                   <>
-                    <Button
-                      variant="secondary"
-                      size="icon"
-                      className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full"
+                    <button
+                      className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-background/80 backdrop-blur-sm border border-border/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-background shadow-soft"
                       onClick={() => setSelectedImage((prev) => (prev === 0 ? images.length - 1 : prev - 1))}
                     >
-                      <ChevronLeft className="h-5 w-5" />
-                    </Button>
-                    <Button
-                      variant="secondary"
-                      size="icon"
-                      className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full"
+                      <ChevronLeft className="h-4 w-4" />
+                    </button>
+                    <button
+                      className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-background/80 backdrop-blur-sm border border-border/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-background shadow-soft"
                       onClick={() => setSelectedImage((prev) => (prev === images.length - 1 ? 0 : prev + 1))}
                     >
-                      <ChevronRight className="h-5 w-5" />
-                    </Button>
+                      <ChevronRight className="h-4 w-4" />
+                    </button>
                   </>
                 )}
 
-                {/* VR/Video Badge */}
-                {(product.has_vr_experience || product.video_url) && (
-                  <div className="absolute top-4 right-4 flex gap-2">
-                    {product.has_vr_experience && (
-                      <Badge className="bg-primary text-primary-foreground gap-1">
-                        <Play className="h-3 w-3" /> تجربة VR
-                      </Badge>
-                    )}
-                  </div>
-                )}
+                {/* Zoom hint */}
+                <div className="absolute bottom-4 left-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span className="flex items-center gap-1.5 px-3 py-1.5 bg-background/80 backdrop-blur-sm rounded-lg text-xs text-muted-foreground border border-border/50">
+                    <Eye className="w-3.5 h-3.5" />
+                    اضغط للتكبير
+                  </span>
+                </div>
               </div>
 
               {/* Thumbnails */}
@@ -248,9 +283,11 @@ export default function ProductDetail() {
                   {images.map((img, index) => (
                     <button
                       key={index}
-                      onClick={() => setSelectedImage(index)}
-                      className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors ${
-                        selectedImage === index ? "border-primary" : "border-transparent"
+                      onClick={() => { setSelectedImage(index); setImageLoaded(false); }}
+                      className={`flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden border-2 transition-all ${
+                        selectedImage === index
+                          ? "border-secondary shadow-gold ring-2 ring-secondary/20"
+                          : "border-border/50 hover:border-secondary/40"
                       }`}
                     >
                       <img src={img} alt="" className="w-full h-full object-cover" />
@@ -264,74 +301,62 @@ export default function ProductDetail() {
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
               className="space-y-6"
             >
-              {/* Badges */}
-              <div className="flex flex-wrap gap-2">
-                {product.is_new && (
-                  <Badge className="bg-secondary text-secondary-foreground">جديد</Badge>
-                )}
-                {product.has_vr_experience && (
-                  <Badge variant="outline">تجربة VR متاحة</Badge>
-                )}
-                {product.stock_quantity < 10 && product.stock_quantity > 0 && (
-                  <Badge variant="destructive">الكمية محدودة</Badge>
-                )}
-              </div>
-
               {/* Title */}
               <div>
-                <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
+                <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-2 leading-tight">
                   {product.name_ar}
                 </h1>
-                <p className="text-muted-foreground">{product.name_en}</p>
+                <p className="text-muted-foreground text-sm">{product.name_en}</p>
               </div>
 
               {/* Rating */}
               {product.rating_average && (
                 <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-0.5">
                     {[...Array(5)].map((_, i) => (
                       <Star
                         key={i}
-                        className={`h-5 w-5 ${
+                        className={`h-4 w-4 ${
                           i < Math.round(product.rating_average!)
                             ? "fill-secondary text-secondary"
-                            : "text-muted"
+                            : "text-border"
                         }`}
                       />
                     ))}
                   </div>
-                  <span className="text-muted-foreground">
-                    ({product.rating_count} تقييم)
+                  <span className="text-sm text-muted-foreground">
+                    {product.rating_average} ({product.rating_count} تقييم)
                   </span>
                 </div>
               )}
 
               {/* Price */}
-              <div className="flex items-center gap-4">
+              <div className="flex items-baseline gap-4 py-4 border-y border-border/50">
                 {product.sale_price ? (
                   <>
-                    <span className="text-3xl font-bold text-primary">
-                      {product.sale_price} ر.س
+                    <span className="text-3xl md:text-4xl font-bold text-secondary">
+                      {product.sale_price.toLocaleString()} <span className="text-lg">ر.س</span>
                     </span>
                     <span className="text-xl text-muted-foreground line-through">
-                      {product.price} ر.س
+                      {product.price.toLocaleString()} ر.س
                     </span>
-                    <Badge className="bg-destructive text-destructive-foreground">
-                      خصم {Math.round(((product.price - product.sale_price) / product.price) * 100)}%
+                    <Badge className="bg-destructive/10 text-destructive border-0 text-xs">
+                      وفّر {(product.price - product.sale_price).toLocaleString()} ر.س
                     </Badge>
                   </>
                 ) : (
-                  <span className="text-3xl font-bold text-primary">
-                    {product.price} ر.س
+                  <span className="text-3xl md:text-4xl font-bold text-foreground">
+                    {product.price.toLocaleString()} <span className="text-lg text-muted-foreground font-normal">ر.س</span>
                   </span>
                 )}
               </div>
 
               {/* Short Description */}
               {product.short_description_ar && (
-                <p className="text-muted-foreground leading-relaxed">
+                <p className="text-muted-foreground leading-relaxed text-sm">
                   {product.short_description_ar}
                 </p>
               )}
@@ -339,16 +364,18 @@ export default function ProductDetail() {
               {/* Colors */}
               {product.colors && product.colors.length > 0 && (
                 <div>
-                  <label className="text-sm font-medium mb-3 block">اللون</label>
+                  <label className="text-sm font-medium mb-3 block">
+                    اللون: <span className="text-secondary">{selectedColor}</span>
+                  </label>
                   <div className="flex flex-wrap gap-2">
                     {product.colors.map((color) => (
                       <button
                         key={color}
                         onClick={() => setSelectedColor(color)}
-                        className={`px-4 py-2 rounded-lg border-2 transition-colors ${
+                        className={`px-4 py-2.5 rounded-xl border-2 text-sm font-medium transition-all ${
                           selectedColor === color
-                            ? "border-primary bg-primary/10"
-                            : "border-border hover:border-primary/50"
+                            ? "border-secondary bg-secondary/10 text-secondary shadow-gold"
+                            : "border-border hover:border-secondary/40 text-foreground/70"
                         }`}
                       >
                         {color}
@@ -358,131 +385,126 @@ export default function ProductDetail() {
                 </div>
               )}
 
-              {/* Quantity */}
-              <div>
-                <label className="text-sm font-medium mb-3 block">الكمية</label>
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center border border-border rounded-lg">
-                    <Button
-                      variant="ghost"
-                      size="icon"
+              {/* Quantity & Add to Cart */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-4">
+                  <label className="text-sm font-medium">الكمية</label>
+                  <div className="flex items-center border border-border rounded-xl overflow-hidden">
+                    <button
                       onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                      className="w-10 h-10 flex items-center justify-center hover:bg-muted transition-colors"
                     >
                       <Minus className="h-4 w-4" />
-                    </Button>
-                    <span className="w-12 text-center font-medium">{quantity}</span>
-                    <Button
-                      variant="ghost"
-                      size="icon"
+                    </button>
+                    <span className="w-12 text-center font-bold text-sm">{quantity}</span>
+                    <button
                       onClick={() => setQuantity((q) => Math.min(product.stock_quantity, q + 1))}
+                      className="w-10 h-10 flex items-center justify-center hover:bg-muted transition-colors"
                     >
                       <Plus className="h-4 w-4" />
-                    </Button>
+                    </button>
                   </div>
-                  <span className="text-sm text-muted-foreground">
-                    {product.stock_quantity} متوفر في المخزون
+                  <span className="text-xs text-muted-foreground flex items-center gap-1">
+                    <Check className="w-3.5 h-3.5 text-secondary" />
+                    {product.stock_quantity > 0 ? `${product.stock_quantity} متوفر` : "غير متوفر"}
                   </span>
                 </div>
+
+                {/* Actions */}
+                <div className="flex gap-3">
+                  <Button
+                    size="lg"
+                    variant="hero"
+                    className="flex-1 gap-2 h-12 text-base"
+                    onClick={handleAddToCart}
+                    disabled={product.stock_quantity === 0}
+                  >
+                    <ShoppingCart className="h-5 w-5" />
+                    أضف للسلة
+                  </Button>
+                  <Button size="lg" variant="outline" className="h-12 w-12 rounded-xl border-border hover:border-secondary hover:text-secondary">
+                    <Heart className="h-5 w-5" />
+                  </Button>
+                  <Button size="lg" variant="outline" className="h-12 w-12 rounded-xl border-border hover:border-secondary hover:text-secondary">
+                    <Share2 className="h-5 w-5" />
+                  </Button>
+                </div>
               </div>
 
-              {/* Actions */}
-              <div className="flex gap-3">
-                <Button
-                  size="lg"
-                  className="flex-1 gap-2"
-                  onClick={handleAddToCart}
-                  disabled={product.stock_quantity === 0}
-                >
-                  <ShoppingCart className="h-5 w-5" />
-                  أضف للسلة
-                </Button>
-                <Button size="lg" variant="outline">
-                  <Heart className="h-5 w-5" />
-                </Button>
-                <Button size="lg" variant="outline">
-                  <Share2 className="h-5 w-5" />
-                </Button>
-              </div>
-
-              {/* Features */}
-              <div className="grid grid-cols-3 gap-4 pt-6 border-t border-border">
-                <div className="text-center">
-                  <div className="w-12 h-12 mx-auto mb-2 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Truck className="h-6 w-6 text-primary" />
+              {/* Trust Features */}
+              <div className="grid grid-cols-3 gap-3 pt-6">
+                {[
+                  { icon: Truck, title: "توصيل مجاني", sub: "فوق 500 ر.س" },
+                  { icon: Shield, title: "ضمان سنتين", sub: "ضمان شامل" },
+                  { icon: RotateCcw, title: "استرجاع سهل", sub: "خلال 14 يوم" },
+                ].map((feat) => (
+                  <div key={feat.title} className="text-center p-4 rounded-xl bg-muted/50 border border-border/50">
+                    <div className="w-10 h-10 mx-auto mb-2 rounded-xl bg-secondary/10 flex items-center justify-center">
+                      <feat.icon className="h-5 w-5 text-secondary" />
+                    </div>
+                    <p className="text-xs font-medium">{feat.title}</p>
+                    <p className="text-[10px] text-muted-foreground">{feat.sub}</p>
                   </div>
-                  <p className="text-sm font-medium">توصيل مجاني</p>
-                  <p className="text-xs text-muted-foreground">للطلبات فوق 500 ر.س</p>
-                </div>
-                <div className="text-center">
-                  <div className="w-12 h-12 mx-auto mb-2 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Shield className="h-6 w-6 text-primary" />
-                  </div>
-                  <p className="text-sm font-medium">ضمان سنتين</p>
-                  <p className="text-xs text-muted-foreground">ضمان شامل</p>
-                </div>
-                <div className="text-center">
-                  <div className="w-12 h-12 mx-auto mb-2 rounded-full bg-primary/10 flex items-center justify-center">
-                    <RotateCcw className="h-6 w-6 text-primary" />
-                  </div>
-                  <p className="text-sm font-medium">استرجاع سهل</p>
-                  <p className="text-xs text-muted-foreground">خلال 14 يوم</p>
-                </div>
+                ))}
               </div>
             </motion.div>
           </div>
 
           {/* Tabs */}
-          <div className="mt-16">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="mt-20"
+          >
             <Tabs defaultValue="description" dir="rtl">
-              <TabsList className="w-full justify-start border-b rounded-none bg-transparent h-auto p-0">
-                <TabsTrigger
-                  value="description"
-                  className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary"
-                >
-                  الوصف
-                </TabsTrigger>
-                <TabsTrigger
-                  value="specifications"
-                  className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary"
-                >
-                  المواصفات
-                </TabsTrigger>
-                <TabsTrigger
-                  value="reviews"
-                  className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary"
-                >
-                  التقييمات
-                </TabsTrigger>
+              <TabsList className="w-full justify-start border-b border-border/50 rounded-none bg-transparent h-auto p-0 gap-0">
+                {[
+                  { value: "description", label: "الوصف" },
+                  { value: "specifications", label: "المواصفات" },
+                  { value: "reviews", label: "التقييمات" },
+                ].map((tab) => (
+                  <TabsTrigger
+                    key={tab.value}
+                    value={tab.value}
+                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-secondary data-[state=active]:text-secondary px-6 py-3 text-sm font-medium"
+                  >
+                    {tab.label}
+                  </TabsTrigger>
+                ))}
               </TabsList>
 
-              <TabsContent value="description" className="mt-6">
-                <div className="prose prose-lg max-w-none text-muted-foreground">
+              <TabsContent value="description" className="mt-8">
+                <div className="prose prose-lg max-w-none text-muted-foreground bg-card rounded-2xl border border-border/50 p-8">
                   {product.description_ar || "لا يوجد وصف متاح لهذا المنتج."}
                 </div>
               </TabsContent>
 
-              <TabsContent value="specifications" className="mt-6">
-                <div className="grid md:grid-cols-2 gap-6">
+              <TabsContent value="specifications" className="mt-8">
+                <div className="grid md:grid-cols-2 gap-4">
                   {dimensions && (
-                    <div className="bg-card rounded-xl p-6 border border-border">
-                      <h3 className="font-semibold mb-4">الأبعاد</h3>
-                      <div className="space-y-2 text-sm">
+                    <div className="bg-card rounded-2xl p-6 border border-border/50">
+                      <h3 className="font-display font-semibold mb-4 flex items-center gap-2">
+                        <div className="w-1.5 h-5 bg-secondary rounded-full" />
+                        الأبعاد
+                      </h3>
+                      <div className="space-y-3 text-sm">
                         {dimensions.width && (
-                          <div className="flex justify-between">
+                          <div className="flex justify-between py-2 border-b border-border/30">
                             <span className="text-muted-foreground">العرض</span>
-                            <span>{dimensions.width} سم</span>
+                            <span className="font-medium">{dimensions.width} سم</span>
                           </div>
                         )}
                         {dimensions.height && (
-                          <div className="flex justify-between">
+                          <div className="flex justify-between py-2 border-b border-border/30">
                             <span className="text-muted-foreground">الارتفاع</span>
-                            <span>{dimensions.height} سم</span>
+                            <span className="font-medium">{dimensions.height} سم</span>
                           </div>
                         )}
                         {dimensions.depth && (
-                          <div className="flex justify-between">
+                          <div className="flex justify-between py-2">
                             <span className="text-muted-foreground">العمق</span>
-                            <span>{dimensions.depth} سم</span>
+                            <span className="font-medium">{dimensions.depth} سم</span>
                           </div>
                         )}
                       </div>
@@ -490,26 +512,32 @@ export default function ProductDetail() {
                   )}
 
                   {product.materials && product.materials.length > 0 && (
-                    <div className="bg-card rounded-xl p-6 border border-border">
-                      <h3 className="font-semibold mb-4">المواد</h3>
+                    <div className="bg-card rounded-2xl p-6 border border-border/50">
+                      <h3 className="font-display font-semibold mb-4 flex items-center gap-2">
+                        <div className="w-1.5 h-5 bg-secondary rounded-full" />
+                        المواد
+                      </h3>
                       <div className="flex flex-wrap gap-2">
                         {product.materials.map((material) => (
-                          <Badge key={material} variant="secondary">
+                          <span key={material} className="px-3 py-1.5 rounded-lg bg-muted text-sm text-muted-foreground">
                             {material}
-                          </Badge>
+                          </span>
                         ))}
                       </div>
                     </div>
                   )}
 
                   {specifications && Object.keys(specifications).length > 0 && (
-                    <div className="bg-card rounded-xl p-6 border border-border md:col-span-2">
-                      <h3 className="font-semibold mb-4">مواصفات إضافية</h3>
-                      <div className="grid md:grid-cols-2 gap-4">
+                    <div className="bg-card rounded-2xl p-6 border border-border/50 md:col-span-2">
+                      <h3 className="font-display font-semibold mb-4 flex items-center gap-2">
+                        <div className="w-1.5 h-5 bg-secondary rounded-full" />
+                        مواصفات إضافية
+                      </h3>
+                      <div className="grid md:grid-cols-2 gap-x-8">
                         {Object.entries(specifications).map(([key, value]) => (
-                          <div key={key} className="flex justify-between py-2 border-b border-border">
+                          <div key={key} className="flex justify-between py-3 border-b border-border/30 text-sm">
                             <span className="text-muted-foreground">{key}</span>
-                            <span>{String(value)}</span>
+                            <span className="font-medium">{String(value)}</span>
                           </div>
                         ))}
                       </div>
@@ -518,13 +546,17 @@ export default function ProductDetail() {
                 </div>
               </TabsContent>
 
-              <TabsContent value="reviews" className="mt-6">
-                <div className="text-center py-12 text-muted-foreground">
-                  لا توجد تقييمات بعد. كن أول من يقيم هذا المنتج!
+              <TabsContent value="reviews" className="mt-8">
+                <div className="text-center py-16 bg-card rounded-2xl border border-border/50">
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-muted flex items-center justify-center">
+                    <Star className="w-6 h-6 text-muted-foreground" />
+                  </div>
+                  <p className="text-muted-foreground mb-2">لا توجد تقييمات بعد</p>
+                  <p className="text-sm text-muted-foreground/70">كن أول من يقيم هذا المنتج!</p>
                 </div>
               </TabsContent>
             </Tabs>
-          </div>
+          </motion.div>
         </div>
       </main>
 
