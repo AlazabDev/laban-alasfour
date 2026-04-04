@@ -10,6 +10,10 @@ import {
   Mail,
   ArrowUp,
   Send,
+  CreditCard,
+  Truck,
+  Shield,
+  RotateCcw,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -44,6 +48,13 @@ const socialLinks = [
   { icon: Youtube, href: "#", label: "Youtube" },
 ];
 
+const trustFeatures = [
+  { icon: Truck, label: "شحن مجاني", desc: "للطلبات فوق 500 ر.س" },
+  { icon: Shield, label: "ضمان سنتين", desc: "ضمان شامل" },
+  { icon: RotateCcw, label: "استرجاع سهل", desc: "خلال 14 يوم" },
+  { icon: CreditCard, label: "دفع آمن", desc: "طرق دفع متعددة" },
+];
+
 export function Footer() {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -51,6 +62,25 @@ export function Footer() {
 
   return (
     <footer className="bg-foreground text-background" dir="rtl">
+      {/* Trust Features Bar */}
+      <div className="border-b border-background/10">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x md:rtl:divide-x-reverse divide-background/10">
+            {trustFeatures.map((feature) => (
+              <div key={feature.label} className="flex items-center gap-3 py-6 px-4 md:justify-center">
+                <div className="w-10 h-10 rounded-xl bg-secondary/10 flex items-center justify-center flex-shrink-0">
+                  <feature.icon className="w-5 h-5 text-secondary" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-background/90">{feature.label}</p>
+                  <p className="text-xs text-background/40">{feature.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* Newsletter Section */}
       <div className="border-b border-background/10">
         <div className="container mx-auto px-4 py-16">
@@ -62,7 +92,7 @@ export function Footer() {
           >
             <div className="text-center lg:text-right max-w-md">
               <h3 className="font-display text-3xl font-bold mb-3">
-                ابقَ على <span className="text-secondary">اطلاع</span>
+                ابقَ على <span className="text-gradient-gold">اطلاع</span>
               </h3>
               <p className="text-background/50 text-sm leading-relaxed">
                 احصل على آخر العروض والمنتجات الجديدة مباشرة في بريدك الإلكتروني
@@ -78,7 +108,7 @@ export function Footer() {
                 <Button
                   size="icon"
                   variant="ghost"
-                  className="absolute left-1 top-1/2 -translate-y-1/2 h-10 w-10 text-secondary hover:bg-secondary/10 rounded-lg"
+                  className="absolute left-1 top-1/2 -translate-y-1/2 h-10 w-10 bg-secondary text-secondary-foreground hover:bg-secondary/90 rounded-lg"
                 >
                   <Send className="w-4 h-4" />
                 </Button>
@@ -105,11 +135,11 @@ export function Footer() {
             <div className="space-y-3">
               {[
                 { icon: MapPin, text: "الرياض، المملكة العربية السعودية" },
-                { icon: Phone, text: "+966 50 123 4567", dir: "ltr" },
+                { icon: Phone, text: "+966 50 123 4567", dir: "ltr" as const },
                 { icon: Mail, text: "info@labanalasfour.com" },
               ].map((item) => (
-                <div key={item.text} className="flex items-center gap-3 text-background/40 text-sm">
-                  <item.icon className="w-4 h-4 text-secondary/60 flex-shrink-0" />
+                <div key={item.text} className="flex items-center gap-3 text-background/40 text-sm group hover:text-background/60 transition-colors">
+                  <item.icon className="w-4 h-4 text-secondary/60 flex-shrink-0 group-hover:text-secondary transition-colors" />
                   <span dir={item.dir}>{item.text}</span>
                 </div>
               ))}
@@ -123,14 +153,18 @@ export function Footer() {
             { title: "الدعم", links: footerLinks.support },
           ].map((section) => (
             <div key={section.title}>
-              <h4 className="font-display font-semibold text-sm mb-6 text-background/70">{section.title}</h4>
+              <h4 className="font-display font-semibold text-sm mb-6 text-background/70 relative inline-block">
+                {section.title}
+                <span className="absolute -bottom-1 right-0 w-8 h-0.5 bg-secondary/40 rounded-full" />
+              </h4>
               <ul className="space-y-3">
                 {section.links.map((link) => (
                   <li key={link.name}>
                     <Link
                       to={link.href}
-                      className="text-background/40 hover:text-secondary transition-colors duration-300 text-sm"
+                      className="text-background/40 hover:text-secondary transition-colors duration-300 text-sm flex items-center gap-2 group"
                     >
+                      <span className="w-0 h-px bg-secondary group-hover:w-3 transition-all duration-300" />
                       {link.name}
                     </Link>
                   </li>
@@ -150,13 +184,13 @@ export function Footer() {
             </p>
 
             {/* Social Links */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               {socialLinks.map((social) => (
                 <a
                   key={social.label}
                   href={social.href}
                   aria-label={social.label}
-                  className="w-9 h-9 rounded-full bg-background/5 flex items-center justify-center hover:bg-secondary hover:text-secondary-foreground transition-all duration-300 text-background/40"
+                  className="w-9 h-9 rounded-lg bg-background/5 flex items-center justify-center hover:bg-secondary hover:text-secondary-foreground transition-all duration-300 text-background/40 hover:shadow-gold"
                 >
                   <social.icon className="w-4 h-4" />
                 </a>
@@ -166,7 +200,7 @@ export function Footer() {
             {/* Back to Top */}
             <motion.button
               onClick={scrollToTop}
-              className="w-9 h-9 rounded-full bg-secondary/10 border border-secondary/20 flex items-center justify-center text-secondary hover:bg-secondary hover:text-secondary-foreground transition-all duration-300"
+              className="w-9 h-9 rounded-lg bg-secondary/10 border border-secondary/20 flex items-center justify-center text-secondary hover:bg-secondary hover:text-secondary-foreground transition-all duration-300"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
             >
