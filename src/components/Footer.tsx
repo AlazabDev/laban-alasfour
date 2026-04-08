@@ -124,7 +124,7 @@ export function Footer() {
           {/* Brand */}
           <div className="lg:col-span-2">
             <Link to="/" className="inline-block mb-6">
-              <img src={logo} alt="Laban Alasfour" className="h-14 brightness-0 invert opacity-80" />
+              <img src={logo} alt="لبن الأصفور" className="h-14 brightness-0 invert opacity-80" />
             </Link>
             <p className="text-background/40 mb-8 leading-relaxed max-w-sm text-sm">
               لبن الأصفور للحلول المعمارية المتقدمة. نقدم أرقى قطع الأثاث والإضاءة
