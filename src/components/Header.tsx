@@ -34,16 +34,16 @@ export function Header() {
 
   return (
     <>
-      {/* Top Bar */}
-      <div className="hidden lg:block bg-primary text-primary-foreground/80 text-xs">
+      {/* Top Bar - matching azab.services dark style */}
+      <div className="hidden lg:block bg-foreground text-background/70 text-xs">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-9" dir="rtl">
+          <div className="flex items-center justify-between h-10" dir="rtl">
             <div className="flex items-center gap-6">
               <span className="flex items-center gap-1.5">
                 <Phone className="w-3 h-3 text-secondary" />
                 <span dir="ltr">+966 50 123 4567</span>
               </span>
-              <span className="text-primary-foreground/40">|</span>
+              <span className="text-background/20">|</span>
               <span>شحن مجاني للطلبات فوق 500 ر.س</span>
             </div>
             <div className="flex items-center gap-4">
@@ -52,7 +52,7 @@ export function Header() {
                 className="flex items-center gap-1.5 hover:text-secondary transition-colors"
               >
                 <Globe className="w-3 h-3" />
-                {isArabic ? "English" : "العربية"}
+                {isArabic ? "EN" : "العربية"}
               </button>
             </div>
           </div>
@@ -70,11 +70,11 @@ export function Header() {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-[72px]">
             {/* Logo */}
-            <Link to="/" className="flex items-center gap-2 relative z-10">
+            <Link to="/" className="flex items-center gap-3 relative z-10">
               <motion.img
                 src={logo}
-                alt="Laban Alasfour"
-                className="h-11 w-auto"
+                alt="لبن الأصفور - للحلول المعمارية المتقدمة"
+                className="h-12 w-auto"
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 300 }}
               />
@@ -88,7 +88,7 @@ export function Header() {
                   <Link
                     key={link.href}
                     to={link.href}
-                    className={`relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-lg group ${
+                    className={`relative px-4 py-2 text-sm font-semibold transition-all duration-300 rounded-lg group ${
                       isActive
                         ? "text-secondary"
                         : "text-foreground/70 hover:text-foreground"
@@ -98,12 +98,12 @@ export function Header() {
                     {isActive && (
                       <motion.div
                         layoutId="nav-indicator"
-                        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-5 h-0.5 bg-gradient-gold rounded-full"
+                        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-0.5 bg-secondary rounded-full"
                         transition={{ type: "spring", stiffness: 300, damping: 30 }}
                       />
                     )}
                     {!isActive && (
-                      <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-secondary/30 rounded-full group-hover:w-5 transition-all duration-300" />
+                      <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-secondary/30 rounded-full group-hover:w-6 transition-all duration-300" />
                     )}
                   </Link>
                 );
@@ -171,7 +171,7 @@ export function Header() {
                     >
                       <Link
                         to={link.href}
-                        className={`block text-base font-medium py-3 px-4 rounded-xl transition-all ${
+                        className={`block text-base font-semibold py-3 px-4 rounded-xl transition-all ${
                           isActive
                             ? "text-secondary bg-secondary/10 border-r-2 border-secondary"
                             : "text-foreground/70 hover:text-foreground hover:bg-muted/50"
