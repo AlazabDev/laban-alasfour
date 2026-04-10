@@ -19,6 +19,7 @@ import {
   AlertTitle,
 } from "@/components/ui/alert";
 import { supabase } from "@/integrations/supabase/client";
+import { getErrorCode, getErrorMessage } from "@/lib/errors";
 import { toast } from "sonner";
 
 interface CSVRow {
@@ -165,7 +166,7 @@ export default function ImportCSV() {
         const { error } = await supabase.from("products").insert([productData]);
 
         if (error) {
-          if (error.code === "23505") {
+          if (getErrorCode(error) === "23505") {
             importResults.push({
               row: i + 1,
               name: row.name_ar,
@@ -183,12 +184,12 @@ export default function ImportCSV() {
             message: "تم الاستيراد بنجاح",
           });
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         importResults.push({
           row: i + 1,
           name: row.name_ar || `صف ${i + 1}`,
           status: "error",
-          message: error.message || "خطأ غير معروف",
+          message: getErrorMessage(error),
         });
       }
 

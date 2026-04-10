@@ -1,148 +1,157 @@
 import { motion } from "framer-motion";
-import { Play, Smartphone, Monitor, Headset, ArrowLeft } from "lucide-react";
+import { ArrowLeft, Headset, Layers3, LampDesk, Play, ScanSearch, Smartphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import vrImage from "@/assets/vr-experience.jpg";
 
 const features = [
   {
-    icon: Headset,
-    title: "تجربة VR كاملة",
-    description: "استخدم نظارات VR لتجربة غامرة",
+    icon: ScanSearch,
+    title: "افحص النسب والحجم",
+    description: "تأكد أن الوحدة تناسب الجدار فعلاً قبل أن تبدأ الشحنة أو التنفيذ.",
   },
   {
-    icon: Smartphone,
-    title: "الواقع المعزز AR",
-    description: "شاهد المنتج في منزلك بالكاميرا",
+    icon: LampDesk,
+    title: "بدّل سيناريو الإضاءة",
+    description: "قارن بين درجات الضوء الدافئ والمحايد وشاهد أثرها على لون الخشب.",
   },
   {
-    icon: Monitor,
-    title: "عرض 360°",
-    description: "استكشف المنتجات من كل الزوايا",
+    icon: Layers3,
+    title: "جرّب أكثر من تشطيب",
+    description: "استعرض الجوز والبلوط والدرجات الداكنة ضمن المشهد نفسه.",
   },
 ];
 
 export function VRExperience() {
   return (
-    <section className="relative py-32 overflow-hidden" dir="rtl">
-      {/* Background */}
+    <section className="relative overflow-hidden py-32" dir="rtl">
       <div className="absolute inset-0 bg-primary" />
-      <div className="absolute inset-0 opacity-[0.03]"
+      <div
+        className="absolute inset-0 opacity-[0.04]"
         style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, hsl(var(--primary-foreground)) 1px, transparent 0)`,
-          backgroundSize: "40px 40px",
+          backgroundImage:
+            "radial-gradient(circle at 1px 1px, hsl(var(--primary-foreground)) 1px, transparent 0)",
+          backgroundSize: "38px 38px",
         }}
       />
+      <div className="absolute right-0 top-0 h-[420px] w-[420px] rounded-full bg-secondary/10 blur-[140px]" />
+      <div className="absolute bottom-0 left-0 h-[360px] w-[360px] rounded-full bg-secondary/8 blur-[120px]" />
 
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-16 lg:gap-20 items-center">
-          {/* Content */}
+      <div className="container relative z-10 mx-auto px-4">
+        <div className="grid items-center gap-16 lg:grid-cols-[0.95fr_1.05fr] lg:gap-20">
           <motion.div
             initial={{ opacity: 0, x: 60 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: [0.25, 0.4, 0.25, 1] }}
           >
-            <motion.span
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="inline-block text-secondary/80 font-medium text-xs tracking-[0.2em] uppercase mb-6"
-            >
-              — تقنية حصرية
-            </motion.span>
+            <span className="inline-block text-xs font-medium uppercase tracking-[0.24em] text-secondary/85">
+              — التجربة التي تحسم القرار
+            </span>
 
-            <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground mb-6 leading-tight">
-              جرّب الأثاث في
-              <br />
-              منزلك <span className="text-secondary">قبل الشراء</span>
+            <h2 className="mt-5 font-display text-4xl font-bold leading-tight text-primary-foreground md:text-5xl lg:text-6xl">
+              شاهد الوحدة الخشبية
+              <span className="block text-secondary">والضوء المحيط بها قبل أن تشتريها</span>
             </h2>
 
-            <p className="text-primary-foreground/60 text-base md:text-lg mb-10 leading-relaxed max-w-lg">
-              استخدم تقنية الواقع الافتراضي لمعاينة قطع الأثاث في بيئتك المنزلية.
-              غيّر الألوان، جرّب مواقع مختلفة، واتخذ قرار الشراء بثقة.
+            <p className="mt-7 max-w-xl text-base leading-8 text-primary-foreground/68 md:text-lg">
+              VR هنا ليس مجرد ميزة إضافية. هو أداة لتقليل التردد: هل المقاس صحيح؟ هل الإضاءة
+              ناعمة أم حادة؟ هل الخشب يبدو دافئاً مع أرضيتك الحالية؟ نمنحك إجابة مرئية قبل القرار.
             </p>
 
-            {/* Features */}
-            <div className="space-y-5 mb-10">
+            <div className="mt-10 space-y-4">
               {features.map((feature, index) => (
                 <motion.div
                   key={feature.title}
-                  initial={{ opacity: 0, x: 30 }}
+                  initial={{ opacity: 0, x: 26 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
-                  className="flex items-center gap-4 group"
+                  transition={{ duration: 0.55, delay: 0.35 + index * 0.08 }}
+                  className="flex items-start gap-4 rounded-2xl border border-primary-foreground/10 bg-primary-foreground/6 p-4 backdrop-blur-md"
                 >
-                  <div className="w-12 h-12 rounded-xl bg-secondary/10 border border-secondary/20 flex items-center justify-center flex-shrink-0 group-hover:bg-secondary/20 transition-colors duration-300">
-                    <feature.icon className="w-5 h-5 text-secondary" />
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-secondary/20 bg-secondary/12">
+                    <feature.icon className="h-5 w-5 text-secondary" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-primary-foreground text-sm">{feature.title}</h3>
-                    <p className="text-primary-foreground/50 text-xs mt-0.5">{feature.description}</p>
+                    <h3 className="font-semibold text-primary-foreground">{feature.title}</h3>
+                    <p className="mt-1 text-sm leading-7 text-primary-foreground/56">{feature.description}</p>
                   </div>
                 </motion.div>
               ))}
             </div>
 
-            <div className="flex flex-wrap gap-4">
+            <div className="mt-10 flex flex-wrap gap-4">
               <Link to="/vr">
                 <Button variant="secondary" size="lg" className="group">
-                  جرّب الآن
-                  <ArrowLeft className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" />
+                  ابدأ تجربة VR
+                  <ArrowLeft className="mr-2 h-5 w-5 transition-transform group-hover:-translate-x-1" />
                 </Button>
               </Link>
-              <Button variant="ghost" size="lg" className="text-primary-foreground/70 hover:text-secondary hover:bg-secondary/10">
-                <Play className="w-5 h-5 ml-2" />
-                شاهد الفيديو
+              <Button
+                variant="ghost"
+                size="lg"
+                className="text-primary-foreground/75 hover:bg-secondary/10 hover:text-secondary"
+              >
+                <Play className="ml-2 h-5 w-5" />
+                شاهد كيف تعمل التجربة
               </Button>
             </div>
           </motion.div>
 
-          {/* Image */}
           <motion.div
             initial={{ opacity: 0, x: -60 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.4, 0.25, 1] }}
             className="relative"
           >
-            {/* Main image */}
-            <div className="relative rounded-3xl overflow-hidden">
-              <div className="aspect-[4/5] lg:aspect-[3/4]">
-                <img
-                  src={vrImage}
-                  alt="تجربة الواقع الافتراضي"
-                  className="w-full h-full object-cover"
-                />
-              </div>
+            <div className="relative overflow-hidden rounded-[2rem] border border-primary-foreground/10 bg-primary-foreground/5 p-3 backdrop-blur-xl">
+              <div className="relative overflow-hidden rounded-[1.5rem]">
+                <div className="aspect-[4/5] lg:aspect-[5/6]">
+                  <img src={vrImage} alt="تجربة معاينة وحدات خشبية وإضاءة عبر VR" className="h-full w-full object-cover" />
+                </div>
 
-              {/* Play Button */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <motion.button
-                  className="w-20 h-20 rounded-full bg-secondary/90 backdrop-blur-sm flex items-center justify-center shadow-gold group"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Play className="w-8 h-8 text-secondary-foreground fill-current mr-[-2px]" />
-                </motion.button>
-              </div>
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,28,40,0.08)_0%,rgba(18,28,40,0.52)_100%)]" />
 
-              {/* Subtle overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-primary/40 via-transparent to-transparent" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <motion.button
+                    className="group flex h-20 w-20 items-center justify-center rounded-full bg-secondary/92 shadow-gold"
+                    whileHover={{ scale: 1.08 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <Play className="mr-[-2px] h-8 w-8 fill-current text-secondary-foreground" />
+                  </motion.button>
+                </div>
+              </div>
             </div>
 
-            {/* Floating Stats Card */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.8 }}
-              className="absolute -bottom-6 -left-4 lg:-left-8 bg-card p-5 rounded-2xl shadow-elevated border border-border/50"
+              transition={{ duration: 0.55, delay: 0.75 }}
+              className="absolute -bottom-6 -left-3 rounded-[1.5rem] border border-border/50 bg-card p-5 shadow-elevated lg:-left-8"
             >
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-gradient-gold flex items-center justify-center">
-                  <Headset className="w-6 h-6 text-secondary-foreground" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-gold">
+                  <Headset className="h-6 w-6 text-secondary-foreground" />
                 </div>
                 <div>
                   <div className="font-display text-xl font-bold text-foreground">+2,000</div>
-                  <div className="text-xs text-muted-foreground">تجربة VR ناجحة</div>
+                  <div className="text-xs text-muted-foreground">جلسة معاينة قبل الشراء</div>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, delay: 0.9 }}
+              className="absolute -right-2 top-8 rounded-2xl border border-primary-foreground/10 bg-primary-foreground/8 p-4 backdrop-blur-md"
+            >
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary/15">
+                  <Smartphone className="h-5 w-5 text-secondary" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-primary-foreground">تجربة من الجوال أو النظارة</p>
+                  <p className="text-xs text-primary-foreground/56">للوصول السريع أو الغامر حسب الحاجة</p>
                 </div>
               </div>
             </motion.div>

@@ -23,7 +23,14 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { supabase } from "@/integrations/supabase/client";
+import { getErrorMessage } from "@/lib/errors";
+import type { Json } from "@/integrations/supabase/types";
 import { toast } from "sonner";
+
+interface ProductImage {
+  url: string;
+  is_primary?: boolean;
+}
 
 interface Product {
   id: string;
@@ -32,10 +39,36 @@ interface Product {
   name_en: string;
   price: number;
   stock_quantity: number;
-  images: any;
+  images: Json;
   is_active: boolean;
   is_featured: boolean;
   category: { name_ar: string } | null;
+}
+
+function getProductImages(images: Json): ProductImage[] {
+  if (!Array.isArray(images)) {
+    return [];
+  }
+
+  return images.reduce<ProductImage[]>((result, image) => {
+    if (typeof image !== "object" || image === null || !("url" in image)) {
+      return result;
+    }
+
+    const url = image.url;
+    const isPrimary = "is_primary" in image ? image.is_primary : undefined;
+
+    if (typeof url !== "string") {
+      return result;
+    }
+
+    result.push({
+      url,
+      is_primary: typeof isPrimary === "boolean" ? isPrimary : undefined,
+    });
+
+    return result;
+  }, []);
 }
 
 export default function Products() {
@@ -90,7 +123,7 @@ export default function Products() {
       toast.success(currentStatus ? "تم إخفاء المنتج" : "تم تفعيل المنتج");
     } catch (error) {
       console.error("Error toggling product:", error);
-      toast.error("حدث خطأ");
+      toast.error(getErrorMessage(error, "حدث خطأ"));
     }
   }
 
@@ -176,7 +209,9 @@ export default function Products() {
               </TableRow>
             ) : (
               filteredProducts.map((product) => {
-                const primaryImage = product.images?.find(img => img.is_primary)?.url || product.images?.[0]?.url;
+                const productImages = getProductImages(product.images);
+                const primaryImage =
+                  productImages.find((img) => img.is_primary)?.url || productImages[0]?.url;
                 return (
                   <TableRow key={product.id}>
                     <TableCell>

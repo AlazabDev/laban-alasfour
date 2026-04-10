@@ -1,75 +1,74 @@
 import { motion } from "framer-motion";
-import { ShieldCheck, Palette, Clock, Gem } from "lucide-react";
+import { Boxes, LampFloor, Ruler, ScanSearch } from "lucide-react";
 
 const reasons = [
   {
-    icon: ShieldCheck,
-    title: "ضمان جودة شامل",
-    description: "نلتزم بأعلى معايير الجودة مع ضمان على جميع المنتجات لراحة بالك الكاملة.",
+    icon: Boxes,
+    title: "لغة خشب واضحة",
+    description: "نركز على الوحدات التي تحمل شخصية الخامة نفسها، من الشرائح إلى الجوز والبلوط والتشطيبات الدافئة.",
   },
   {
-    icon: Palette,
-    title: "تصاميم عصرية ومبتكرة",
-    description: "تصاميم حصرية مستوحاة من أحدث صيحات الديكور العالمية لتناسب ذوقك الرفيع.",
+    icon: LampFloor,
+    title: "إضاءة تبني الجو لا تشتته",
+    description: "كل وحدة إضاءة هنا مختارة لتخدم المشهد المعماري وتبرز الأبعاد والخطوط بدقة.",
   },
   {
-    icon: Clock,
-    title: "التزام صارم بالمواعيد",
-    description: "جداول توصيل واضحة مع تحديثات مستمرة حتى وصول طلبك بأمان.",
+    icon: ScanSearch,
+    title: "تجربة قبل الدفع",
+    description: "ميزة VR تمنحك معاينة أقرب للواقع فتختبر الحجم والمظهر قبل أي التزام شرائي.",
   },
   {
-    icon: Gem,
-    title: "خامات أوروبية فاخرة",
-    description: "نتعامل مع أفضل المصنعين لضمان متانة وجمال كل قطعة أثاث.",
+    icon: Ruler,
+    title: "قرارات مبنية على المقاس",
+    description: "نطابق المنتج مع المساحة لا مع صورة مثالية فقط، لذلك يبدو الاختيار منطقياً بعد وصوله فعلاً.",
   },
 ];
 
 export function WhyChooseUs() {
   return (
-    <section className="py-28 bg-background" dir="rtl">
-      <div className="container mx-auto px-4">
-        {/* Header */}
+    <section className="relative overflow-hidden bg-background py-28" dir="rtl">
+      <div className="absolute left-0 top-20 h-[360px] w-[360px] rounded-full bg-secondary/5 blur-[110px]" />
+      <div className="absolute bottom-0 right-0 h-[300px] w-[300px] rounded-full bg-primary/5 blur-[100px]" />
+
+      <div className="container relative z-10 mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="mb-16 text-center"
         >
-          <span className="inline-block text-secondary font-medium text-xs tracking-[0.2em] uppercase mb-4">
-            — لماذا نحن
+          <span className="inline-block text-xs font-medium uppercase tracking-[0.22em] text-secondary">
+            — لماذا هذا المتجر
           </span>
-          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-            لماذا يثق بنا <span className="text-gradient-gold">عملاؤنا؟</span>
+          <h2 className="mt-4 font-display text-4xl font-bold md:text-5xl lg:text-6xl">
+            لأننا نبيع
+            <span className="block text-gradient-gold">نتيجة بصرية يمكن الوثوق بها</span>
           </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
-            نحن لا نبيع أثاثاً عادياً — بل نصنع تجربة معيشية تعكس شخصيتك وذوقك الرفيع بأعلى معايير الاحترافية.
+          <p className="mx-auto mt-6 max-w-3xl text-sm leading-8 text-muted-foreground md:text-base">
+            المتجر مبني لمن يبحث عن وضوح في الخامة والضوء، لا عن صور تسويقية جميلة فقط. لذلك
+            نربط بين الوحدات الخشبية، حلول الإضاءة، وتجربة المعاينة قبل الشراء.
           </p>
         </motion.div>
 
-        {/* Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {reasons.map((reason, index) => (
             <motion.div
               key={reason.title}
-              initial={{ opacity: 0, y: 40 }}
+              initial={{ opacity: 0, y: 34 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.2 + index * 0.1 }}
-              className="group relative bg-card rounded-2xl p-8 border border-border/50 hover:border-secondary/30 transition-all duration-500 hover:shadow-elevated text-center"
+              transition={{ duration: 0.65, delay: 0.16 + index * 0.08 }}
+              className="group relative rounded-[1.8rem] border border-border/50 bg-card p-8 text-right transition-all duration-500 hover:-translate-y-1 hover:border-secondary/25 hover:shadow-elevated"
             >
-              {/* Icon */}
-              <div className="w-16 h-16 mx-auto rounded-2xl bg-secondary/10 border border-secondary/15 flex items-center justify-center mb-6 group-hover:bg-secondary/20 group-hover:scale-110 transition-all duration-500">
-                <reason.icon className="w-7 h-7 text-secondary" />
+              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-secondary/15 bg-secondary/10 transition-all duration-500 group-hover:bg-secondary/15">
+                <reason.icon className="h-7 w-7 text-secondary" />
               </div>
 
-              <h3 className="font-display text-lg font-bold mb-3 group-hover:text-secondary transition-colors duration-300">
+              <h3 className="font-display text-xl font-bold text-foreground transition-colors duration-300 group-hover:text-secondary">
                 {reason.title}
               </h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                {reason.description}
-              </p>
+              <p className="mt-4 text-sm leading-8 text-muted-foreground">{reason.description}</p>
 
-              {/* Hover accent line */}
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 group-hover:w-16 h-0.5 bg-secondary rounded-full transition-all duration-500" />
+              <div className="absolute bottom-0 right-8 h-0.5 w-0 rounded-full bg-secondary transition-all duration-500 group-hover:w-16" />
             </motion.div>
           ))}
         </div>
