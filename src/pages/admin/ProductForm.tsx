@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowRight, Plus, Trash2, ImagePlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
+import { getErrorCode } from "@/lib/errors";
+import type { Json } from "@/integrations/supabase/types";
 import { toast } from "sonner";
 
 interface Category {
@@ -91,23 +93,20 @@ export default function ProductForm() {
   const [saving, setSaving] = useState(false);
   const [newImageUrl, setNewImageUrl] = useState("");
 
-  useEffect(() => {
-    fetchCategories();
-    if (isEditing) {
-      fetchProduct();
-    }
-  }, [id]);
-
-  async function fetchCategories() {
+  const fetchCategories = useCallback(async () => {
     const { data } = await supabase
       .from("categories")
       .select("id, name_ar")
       .eq("is_active", true)
       .order("name_ar");
     setCategories(data || []);
-  }
+  }, []);
 
-  async function fetchProduct() {
+  const fetchProduct = useCallback(async () => {
+    if (!id) {
+      return;
+    }
+
     setLoading(true);
     try {
       const { data, error } = await supabase
@@ -133,7 +132,14 @@ export default function ProductForm() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [id]);
+
+  useEffect(() => {
+    fetchCategories();
+    if (isEditing) {
+      fetchProduct();
+    }
+  }, [fetchCategories, fetchProduct, isEditing]);
 
   function generateSlug(name: string) {
     return name
@@ -144,11 +150,11 @@ export default function ProductForm() {
       .replace(/^-+|-+$/g, "");
   }
 
-  function handleChange(field: keyof ProductFormData, value: any) {
+  function handleChange<K extends keyof ProductFormData>(field: K, value: ProductFormData[K]) {
     setFormData(prev => {
       const updated = { ...prev, [field]: value };
       if (field === "name_en" && !isEditing) {
-        updated.slug = generateSlug(value);
+        updated.slug = generateSlug(String(value));
       }
       return updated;
     });
@@ -192,7 +198,7 @@ export default function ProductForm() {
     try {
       const productData = {
         ...formData,
-        images: formData.images as any,
+        images: formData.images as unknown as Json,
         category_id: formData.category_id || null,
         sale_price: formData.sale_price || null,
         cost_price: formData.cost_price || null,
@@ -214,9 +220,9 @@ export default function ProductForm() {
       }
       
       navigate("/admin/products");
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error saving product:", error);
-      if (error.code === "23505") {
+      if (getErrorCode(error) === "23505") {
         toast.error("الـ SKU أو Slug موجود مسبقاً");
       } else {
         toast.error("حدث خطأ في حفظ المنتج");

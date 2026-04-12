@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Heart, Eye, ShoppingBag, Star, View, ArrowLeft } from "lucide-react";
+import { Eye, Heart, ShoppingBag, Star, View, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
@@ -12,56 +12,60 @@ import sofaImage from "@/assets/product-sofa1.jpg";
 const products = [
   {
     id: 1,
-    name: "ثريا ذهبية معدنية",
-    nameEn: "Golden Metal Chandelier",
-    price: 2500,
-    originalPrice: 3200,
-    image: lampImage,
+    name: "وحدة تلفاز جوز بإضاءة خطية",
+    nameEn: "Walnut TV Unit with Linear Lighting",
+    summary: "خطوط أفقية نظيفة وتخزين مخفي مع ضوء يبرز عروق الخشب.",
+    price: 5400,
+    originalPrice: 6200,
+    image: sofaImage,
     rating: 4.9,
     reviews: 48,
-    category: "إضاءة",
+    category: "وحدات المعيشة",
     hasVR: true,
     isNew: true,
-    discount: 22,
+    discount: 13,
   },
   {
     id: 2,
-    name: "كرسي أكسنت كريمي",
-    nameEn: "Cream Accent Chair",
+    name: "كرسي قراءة بإطار خشبي",
+    nameEn: "Wood Frame Reading Chair",
+    summary: "قطعة مريحة بجلسة هادئة تناسب أركان القراءة والإضاءة الجانبية.",
     price: 1850,
     originalPrice: null,
     image: chairImage,
     rating: 4.8,
     reviews: 32,
-    category: "غرف المعيشة",
+    category: "جلسات خشبية",
     hasVR: true,
     isNew: false,
     discount: 0,
   },
   {
     id: 3,
-    name: "طاولة رخام ذهبية",
-    nameEn: "Marble Gold Table",
+    name: "كونسول شرائح خشبية مضاء",
+    nameEn: "Wood Slat Console with Integrated Light",
+    summary: "حضور معماري خفيف للمداخل والممرات مع وهج دافئ غير مباشر.",
     price: 3200,
-    originalPrice: 4000,
+    originalPrice: 3950,
     image: tableImage,
     rating: 4.7,
     reviews: 56,
-    category: "غرف المعيشة",
+    category: "وحدات مداخل",
     hasVR: true,
     isNew: false,
-    discount: 20,
+    discount: 19,
   },
   {
     id: 4,
-    name: "كنبة زاوية فاخرة",
-    nameEn: "Luxury Corner Sofa",
-    price: 8500,
+    name: "تعليق إضاءة فوق الجزيرة",
+    nameEn: "Kitchen Island Pendant",
+    summary: "وحدة إضاءة طويلة توازن بين الضوء الوظيفي والحضور البصري الراقي.",
+    price: 2600,
     originalPrice: null,
-    image: sofaImage,
-    rating: 5.0,
-    reviews: 89,
-    category: "غرف المعيشة",
+    image: lampImage,
+    rating: 5,
+    reviews: 41,
+    category: "وحدات الإضاءة",
     hasVR: true,
     isNew: true,
     discount: 0,
@@ -71,7 +75,7 @@ const products = [
 export function FeaturedProducts() {
   const { addItem } = useCart();
 
-  const handleAddToCart = (product: typeof products[0]) => {
+  const handleAddToCart = (product: (typeof products)[0]) => {
     addItem({
       id: String(product.id),
       name_ar: product.name,
@@ -84,133 +88,127 @@ export function FeaturedProducts() {
   };
 
   return (
-    <section className="py-28 bg-muted/30" dir="rtl">
+    <section className="bg-muted/20 py-28" dir="rtl">
       <div className="container mx-auto px-4">
-        {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14"
+          className="mb-14 flex flex-col gap-6 md:flex-row md:items-end md:justify-between"
         >
           <div>
-            <motion.span
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5 }}
-              className="inline-block text-secondary font-medium text-xs tracking-[0.2em] uppercase mb-4"
-            >
-              — الأكثر مبيعاً
-            </motion.span>
-            <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
-              منتجات <span className="text-gradient-gold">مميزة</span>
+            <span className="inline-block text-xs font-medium uppercase tracking-[0.22em] text-secondary">
+              — اختيارات البداية
+            </span>
+            <h2 className="mt-4 font-display text-4xl font-bold leading-tight md:text-5xl lg:text-6xl">
+              وحدات مختارة
+              <span className="block text-gradient-gold">تعكس هوية المتجر من أول نظرة</span>
             </h2>
           </div>
-          <Link to="/living">
-            <Button variant="outline" className="group border-border/60 hover:border-secondary">
-              عرض جميع المنتجات
-              <ArrowLeft className="w-4 h-4 mr-1 group-hover:-translate-x-1 transition-transform" />
-            </Button>
-          </Link>
+          <div className="max-w-xl">
+            <p className="text-sm leading-8 text-muted-foreground md:text-base">
+              اخترنا منتجات تجمع بين الخشب والإضاءة والحضور المعماري الواضح. هذه ليست قطعاً معزولة،
+              بل أمثلة على نوع التكوين الذي يمكنك معاينته وتعديله قبل الشراء.
+            </p>
+            <Link to="/living" className="mt-5 inline-block">
+              <Button variant="outline" className="group border-border/60 hover:border-secondary">
+                عرض جميع المنتجات
+                <ArrowLeft className="mr-1 h-4 w-4 transition-transform group-hover:-translate-x-1" />
+              </Button>
+            </Link>
+          </div>
         </motion.div>
 
-        {/* Products Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {products.map((product, index) => (
             <motion.div
               key={product.id}
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.2 + index * 0.1, ease: [0.25, 0.4, 0.25, 1] }}
-              className="group bg-card rounded-2xl overflow-hidden border border-border/50 hover:border-secondary/30 hover:shadow-elevated transition-all duration-500"
+              transition={{ duration: 0.7, delay: 0.16 + index * 0.08, ease: [0.25, 0.4, 0.25, 1] }}
+              className="group overflow-hidden rounded-[1.8rem] border border-border/50 bg-card transition-all duration-500 hover:-translate-y-1 hover:border-secondary/30 hover:shadow-elevated"
             >
-              {/* Image Container */}
               <div className="relative aspect-[4/5] overflow-hidden bg-muted">
                 <img
                   src={product.image}
                   alt={product.name}
-                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                 />
 
-                {/* Top Badges */}
-                <div className="absolute top-4 right-4 flex flex-col gap-2">
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,10,10,0)_40%,rgba(10,10,10,0.78)_100%)]" />
+
+                <div className="absolute right-4 top-4 flex flex-col gap-2">
                   {product.isNew && (
-                    <Badge variant="secondary" className="bg-secondary text-secondary-foreground text-[10px] px-3 py-1">
-                      جديد
+                    <Badge variant="secondary" className="px-3 py-1 text-[10px] text-secondary-foreground">
+                      إصدار جديد
                     </Badge>
                   )}
                   {product.discount > 0 && (
-                    <Badge className="bg-destructive text-destructive-foreground text-[10px] px-3 py-1">
+                    <Badge className="bg-destructive px-3 py-1 text-[10px] text-destructive-foreground">
                       -{product.discount}%
                     </Badge>
                   )}
                   {product.hasVR && (
-                    <Badge variant="vr" className="flex items-center gap-1 text-[10px] px-3 py-1">
-                      <View className="w-3 h-3" />
-                      VR
+                    <Badge variant="vr" className="gap-1 px-3 py-1 text-[10px]">
+                      <View className="h-3 w-3" />
+                      جرّبه عبر VR
                     </Badge>
                   )}
                 </div>
 
-                {/* Quick Actions - Side */}
-                <div className="absolute top-4 left-4 flex flex-col gap-2">
+                <div className="absolute left-4 top-4 flex flex-col gap-2">
                   <motion.button
                     whileTap={{ scale: 0.9 }}
-                    className="w-9 h-9 bg-card/80 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-4 group-hover:translate-x-0 hover:bg-secondary hover:text-secondary-foreground"
+                    className="flex h-9 w-9 translate-x-4 items-center justify-center rounded-full bg-card/80 opacity-0 backdrop-blur-sm transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100 hover:bg-secondary hover:text-secondary-foreground"
                     style={{ transitionDelay: "0ms" }}
                   >
-                    <Heart className="w-4 h-4" />
+                    <Heart className="h-4 w-4" />
                   </motion.button>
                   <motion.button
                     whileTap={{ scale: 0.9 }}
-                    className="w-9 h-9 bg-card/80 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-4 group-hover:translate-x-0 hover:bg-secondary hover:text-secondary-foreground"
+                    className="flex h-9 w-9 translate-x-4 items-center justify-center rounded-full bg-card/80 opacity-0 backdrop-blur-sm transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100 hover:bg-secondary hover:text-secondary-foreground"
                     style={{ transitionDelay: "75ms" }}
                   >
-                    <Eye className="w-4 h-4" />
+                    <Eye className="h-4 w-4" />
                   </motion.button>
                 </div>
 
-                {/* Add to Cart - Bottom */}
-                <div className="absolute bottom-0 left-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">
+                <div className="absolute bottom-0 left-0 right-0 p-4 opacity-0 translate-y-4 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
                   <button
                     onClick={() => handleAddToCart(product)}
-                    className="w-full py-3 bg-primary/95 backdrop-blur-sm text-primary-foreground rounded-xl flex items-center justify-center gap-2 font-medium text-sm hover:bg-primary transition-colors"
+                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary/94 py-3 text-sm font-medium text-primary-foreground backdrop-blur-sm transition-colors hover:bg-primary"
                   >
-                    <ShoppingBag className="w-4 h-4" />
-                    أضف للسلة
+                    <ShoppingBag className="h-4 w-4" />
+                    أضف إلى السلة
                   </button>
                 </div>
               </div>
 
-              {/* Product Info */}
               <div className="p-5">
-                <span className="text-[11px] text-muted-foreground tracking-wider uppercase">{product.category}</span>
-                <h3 className="font-display text-lg font-semibold mt-1.5 group-hover:text-secondary transition-colors duration-300">
-                  {product.name}
-                </h3>
-
-                {/* Rating */}
-                <div className="flex items-center gap-1.5 mt-2.5">
+                <div className="mb-3 flex items-center justify-between gap-3">
+                  <span className="text-[11px] uppercase tracking-[0.22em] text-muted-foreground">{product.category}</span>
                   <div className="flex items-center gap-0.5">
                     {Array.from({ length: 5 }).map((_, i) => (
                       <Star
                         key={i}
-                        className={`w-3.5 h-3.5 ${i < Math.floor(product.rating) ? "fill-secondary text-secondary" : "fill-muted text-muted"}`}
+                        className={`h-3.5 w-3.5 ${i < Math.floor(product.rating) ? "fill-secondary text-secondary" : "fill-muted text-muted"}`}
                       />
                     ))}
+                    <span className="mr-1 text-xs text-muted-foreground">({product.reviews})</span>
                   </div>
-                  <span className="text-xs text-muted-foreground">({product.reviews})</span>
                 </div>
 
-                {/* Price */}
-                <div className="flex items-center gap-3 mt-3 pt-3 border-t border-border/50">
-                  <span className="font-display text-xl font-bold text-secondary">
+                <h3 className="font-display text-xl font-semibold leading-relaxed text-foreground transition-colors duration-300 group-hover:text-secondary">
+                  {product.name}
+                </h3>
+                <p className="mt-3 min-h-[56px] text-sm leading-7 text-muted-foreground">{product.summary}</p>
+
+                <div className="mt-4 flex items-center gap-3 border-t border-border/50 pt-4">
+                  <span className="font-display text-2xl font-bold text-secondary">
                     {product.price.toLocaleString()} <span className="text-xs font-normal">ر.س</span>
                   </span>
                   {product.originalPrice && (
-                    <span className="text-sm text-muted-foreground line-through">
-                      {product.originalPrice.toLocaleString()}
-                    </span>
+                    <span className="text-sm text-muted-foreground line-through">{product.originalPrice.toLocaleString()}</span>
                   )}
                 </div>
               </div>

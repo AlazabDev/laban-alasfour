@@ -17,11 +17,11 @@ const Index = () => {
       <main>
         <Hero />
         <BrandBanner />
-        <Categories />
-        <ServicesOverview />
         <FeaturedProducts />
-        <WhyChooseUs />
+        <Categories />
         <VRExperience />
+        <ServicesOverview />
+        <WhyChooseUs />
         <Testimonials />
         <CTASection />
       </main>

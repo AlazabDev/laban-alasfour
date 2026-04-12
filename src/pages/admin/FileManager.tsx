@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { 
   Upload, 
   Folder, 
@@ -47,6 +47,7 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
+import { getErrorMessage } from "@/lib/errors";
 import { toast } from "sonner";
 import type { Json } from "@/integrations/supabase/types";
 
@@ -131,11 +132,7 @@ export default function FileManager() {
   
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    fetchFiles();
-  }, [selectedBucket, filterType]);
-
-  async function fetchFiles() {
+  const fetchFiles = useCallback(async () => {
     setLoading(true);
     try {
       let query = supabase
@@ -157,7 +154,11 @@ export default function FileManager() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [filterType, selectedBucket]);
+
+  useEffect(() => {
+    fetchFiles();
+  }, [fetchFiles]);
 
   async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const selectedFiles = e.target.files;
@@ -230,10 +231,10 @@ export default function FileManager() {
         progressList[i].status = 'completed';
         setUploadProgress([...progressList]);
 
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error("Upload error:", error);
         progressList[i].status = 'error';
-        progressList[i].error = error.message;
+        progressList[i].error = getErrorMessage(error);
         setUploadProgress([...progressList]);
       }
     }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Plus, Pencil, Trash2, ChevronDown, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,6 +29,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
+import { getErrorCode } from "@/lib/errors";
 import { toast } from "sonner";
 
 interface Category {
@@ -76,7 +77,7 @@ export default function Categories() {
   const [saving, setSaving] = useState(false);
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
 
-  async function fetchCategories() {
+  const fetchCategories = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from("categories")
@@ -110,11 +111,11 @@ export default function Categories() {
     } finally {
       setLoading(false);
     }
-  }
+  }, []);
 
   useEffect(() => {
     fetchCategories();
-  }, []);
+  }, [fetchCategories]);
 
   function generateSlug(name: string) {
     return name
@@ -182,9 +183,9 @@ export default function Categories() {
       
       setDialogOpen(false);
       fetchCategories();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error saving category:", error);
-      if (error.code === "23505") {
+      if (getErrorCode(error) === "23505") {
         toast.error("الـ Slug موجود مسبقاً");
       } else {
         toast.error("حدث خطأ في حفظ الفئة");

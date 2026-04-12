@@ -1,85 +1,77 @@
 import { motion } from "framer-motion";
-import { Star, Quote } from "lucide-react";
+import { Quote, Star } from "lucide-react";
 
 const testimonials = [
   {
     id: 1,
-    name: "سارة المطيري",
-    role: "مصممة داخلية",
-    text: "تجربة تسوق فريدة من نوعها. جودة الأثاث تفوق التوقعات والتوصيل كان في الموعد تماماً. أنصح بالتعامل معهم بشدة!",
+    name: "ريم الحربي",
+    role: "مالكة فيلا خاصة",
+    text: "الميزة الفعلية هنا كانت المعاينة قبل الشراء. رأيت وحدة التلفاز والإضاءة المخفية داخل الجدار نفسه، وعدلت المقاس قبل التنفيذ، فكانت النتيجة مطابقة تقريباً لما رأيته.",
     rating: 5,
-    avatar: "س",
+    avatar: "ر",
   },
   {
     id: 2,
-    name: "أحمد الشمري",
-    role: "مهندس معماري",
-    text: "ميزة الواقع الافتراضي ساعدتني أرى القطع في مكانها الفعلي قبل الشراء. فريق محترف ودقيق، التزموا بالجدول الزمني.",
+    name: "خالد السبيعي",
+    role: "مصمم داخلي",
+    text: "أعجبني أن المتجر يفكر في الخشب والإضاءة كمشهد واحد. هذا يختصر كثيراً من التخمين عند اختيار القطع للعملاء، خاصة مع وجود VR للمراجعة النهائية.",
     rating: 5,
-    avatar: "أ",
+    avatar: "خ",
   },
   {
     id: 3,
-    name: "نورة العتيبي",
-    role: "ربة منزل",
-    text: "اشتريت كنبة الزاوية الفاخرة وكانت أفضل قرار. جودة عالية وتصميم أنيق يناسب الذوق السعودي. خدمة ممتازة!",
+    name: "جود العتيبي",
+    role: "مشروع شقة نموذجية",
+    text: "اخترنا حلول النوم والإضاءة الجانبية من خلال تجربة واضحة جداً. المحتوى والشرح داخل الموقع ساعدنا على فهم الفروق بين التشطيبات قبل أي دفعة.",
     rating: 5,
-    avatar: "ن",
+    avatar: "ج",
   },
 ];
 
 export function Testimonials() {
   return (
-    <section className="py-28 bg-background relative overflow-hidden" dir="rtl">
-      {/* Decorative */}
-      <div className="absolute top-0 left-0 w-[400px] h-[400px] bg-secondary/3 rounded-full blur-[100px]" />
+    <section className="relative overflow-hidden bg-background py-28" dir="rtl">
+      <div className="absolute top-0 left-0 h-[380px] w-[380px] rounded-full bg-secondary/4 blur-[100px]" />
 
-      <div className="container mx-auto px-4 relative z-10">
-        {/* Header */}
+      <div className="container relative z-10 mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="mb-16 text-center"
         >
-          <span className="inline-block text-secondary font-medium text-xs tracking-[0.2em] uppercase mb-4">
-            — آراء العملاء
+          <span className="inline-block text-xs font-medium uppercase tracking-[0.22em] text-secondary">
+            — انطباعات حقيقية
           </span>
-          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold">
-            ماذا يقول <span className="text-gradient-gold">عملاؤنا</span>
+          <h2 className="mt-4 font-display text-4xl font-bold md:text-5xl lg:text-6xl">
+            كيف ساعدت التجربة
+            <span className="block text-gradient-gold">العملاء على الشراء بثقة</span>
           </h2>
         </motion.div>
 
-        {/* Testimonials Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid gap-6 md:grid-cols-3">
           {testimonials.map((item, index) => (
             <motion.div
               key={item.id}
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.2 + index * 0.1, ease: [0.25, 0.4, 0.25, 1] }}
-              className="relative bg-card rounded-2xl p-8 border border-border/50 hover:border-secondary/20 transition-all duration-500 group hover:shadow-elevated"
+              transition={{ duration: 0.65, delay: 0.18 + index * 0.08, ease: [0.25, 0.4, 0.25, 1] }}
+              className="group relative rounded-[1.8rem] border border-border/50 bg-card p-8 transition-all duration-500 hover:-translate-y-1 hover:border-secondary/20 hover:shadow-elevated"
             >
-              {/* Quote icon */}
-              <div className="absolute top-6 left-6">
-                <Quote className="w-10 h-10 text-secondary/10 group-hover:text-secondary/20 transition-colors duration-500" />
+              <div className="absolute left-6 top-6">
+                <Quote className="h-10 w-10 text-secondary/12 transition-colors duration-500 group-hover:text-secondary/20" />
               </div>
 
-              {/* Stars */}
-              <div className="flex items-center gap-0.5 mb-6">
+              <div className="mb-6 flex items-center gap-0.5">
                 {Array.from({ length: item.rating }).map((_, i) => (
-                  <Star key={i} className="w-4 h-4 fill-secondary text-secondary" />
+                  <Star key={i} className="h-4 w-4 fill-secondary text-secondary" />
                 ))}
               </div>
 
-              {/* Text */}
-              <p className="text-foreground/80 leading-relaxed mb-8 text-sm min-h-[80px]">
-                "{item.text}"
-              </p>
+              <p className="min-h-[130px] text-sm leading-8 text-foreground/82">"{item.text}"</p>
 
-              {/* Author */}
-              <div className="flex items-center gap-3 pt-6 border-t border-border/50">
-                <div className="w-12 h-12 rounded-full bg-secondary/10 border border-secondary/20 flex items-center justify-center text-secondary font-bold">
+              <div className="mt-8 flex items-center gap-3 border-t border-border/50 pt-6">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full border border-secondary/20 bg-secondary/10 font-bold text-secondary">
                   {item.avatar}
                 </div>
                 <div>

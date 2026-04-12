@@ -14,30 +14,32 @@ import {
   Truck,
   Shield,
   RotateCcw,
+  ScanSearch,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { companyProfile } from "@/lib/company";
 import logo from "@/assets/logo.png";
 
 const footerLinks = {
   products: [
-    { name: "غرف المعيشة", href: "/living" },
+    { name: "وحدات المعيشة", href: "/living" },
     { name: "غرف النوم", href: "/bedroom" },
-    { name: "الإضاءة", href: "/lighting" },
-    { name: "المطابخ", href: "/kitchen" },
+    { name: "وحدات الإضاءة", href: "/lighting" },
+    { name: "حلول المطابخ", href: "/kitchen" },
     { name: "تجربة VR", href: "/vr" },
   ],
   company: [
-    { name: "من نحن", href: "/about" },
-    { name: "المدونة", href: "/blog" },
-    { name: "وظائف", href: "/careers" },
-    { name: "اتصل بنا", href: "/contact" },
+    { name: "عن المتجر", href: "/about" },
+    { name: "آلية المعاينة", href: "/vr" },
+    { name: "حلول المشاريع", href: "/projects" },
+    { name: "تواصل معنا", href: "/contact" },
   ],
   support: [
-    { name: "مركز المساعدة", href: "/help" },
-    { name: "الشحن والتوصيل", href: "/shipping" },
-    { name: "سياسة الإرجاع", href: "/returns" },
     { name: "الأسئلة الشائعة", href: "/faq" },
+    { name: "الشحن والتركيب", href: "/shipping" },
+    { name: "سياسة الاسترجاع", href: "/returns" },
+    { name: "دليل الخامات", href: "/materials" },
   ],
 };
 
@@ -49,10 +51,10 @@ const socialLinks = [
 ];
 
 const trustFeatures = [
-  { icon: Truck, label: "شحن مجاني", desc: "للطلبات فوق 500 ر.س" },
-  { icon: Shield, label: "ضمان سنتين", desc: "ضمان شامل" },
-  { icon: RotateCcw, label: "استرجاع سهل", desc: "خلال 14 يوم" },
-  { icon: CreditCard, label: "دفع آمن", desc: "طرق دفع متعددة" },
+  { icon: Truck, label: "شحن وتركيب", desc: "تنسيق واضح حتى التسليم" },
+  { icon: Shield, label: "ضمان جودة", desc: "خامات وتشطيبات مدروسة" },
+  { icon: RotateCcw, label: "قرار أوضح", desc: "معاينة قبل الدفع" },
+  { icon: CreditCard, label: "دفع آمن", desc: "وسائل دفع متعددة" },
 ];
 
 export function Footer() {
@@ -62,18 +64,17 @@ export function Footer() {
 
   return (
     <footer className="bg-foreground text-background" dir="rtl">
-      {/* Trust Features Bar */}
       <div className="border-b border-background/10">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x md:rtl:divide-x-reverse divide-background/10">
+          <div className="grid grid-cols-2 divide-y divide-background/10 md:grid-cols-4 md:divide-x md:divide-y-0 md:rtl:divide-x-reverse">
             {trustFeatures.map((feature) => (
-              <div key={feature.label} className="flex items-center gap-3 py-6 px-4 md:justify-center">
-                <div className="w-10 h-10 rounded-xl bg-secondary/10 flex items-center justify-center flex-shrink-0">
-                  <feature.icon className="w-5 h-5 text-secondary" />
+              <div key={feature.label} className="flex items-center gap-3 px-4 py-6 md:justify-center">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary/10">
+                  <feature.icon className="h-5 w-5 text-secondary" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-background/90">{feature.label}</p>
-                  <p className="text-xs text-background/40">{feature.desc}</p>
+                  <p className="text-sm font-medium text-background/92">{feature.label}</p>
+                  <p className="text-xs text-background/45">{feature.desc}</p>
                 </div>
               </div>
             ))}
@@ -81,36 +82,37 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Newsletter Section */}
       <div className="border-b border-background/10">
         <div className="container mx-auto px-4 py-16">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="flex flex-col lg:flex-row items-center justify-between gap-10"
+            className="flex flex-col items-center justify-between gap-10 lg:flex-row"
           >
-            <div className="text-center lg:text-right max-w-md">
-              <h3 className="font-display text-3xl font-bold mb-3">
-                ابقَ على <span className="text-gradient-gold">اطلاع</span>
+            <div className="max-w-lg text-center lg:text-right">
+              <h3 className="font-display text-3xl font-bold">
+                محتوى يلهمك لاختيار
+                <span className="block text-gradient-gold">الخامة والإضاءة بشكل أدق</span>
               </h3>
-              <p className="text-background/50 text-sm leading-relaxed">
-                احصل على آخر العروض والمنتجات الجديدة مباشرة في بريدك الإلكتروني
+              <p className="mt-4 text-sm leading-7 text-background/50">
+                اشترك ليصلك الجديد من الوحدات الخشبية، مشاهد الإضاءة، ونصائح المعاينة قبل الشراء.
               </p>
             </div>
-            <div className="flex gap-2 w-full lg:w-auto">
-              <div className="relative flex-1 lg:min-w-[320px]">
+
+            <div className="flex w-full gap-2 lg:w-auto">
+              <div className="relative flex-1 lg:min-w-[340px]">
                 <Input
                   type="email"
                   placeholder="بريدك الإلكتروني"
-                  className="bg-background/5 border-background/15 text-background placeholder:text-background/30 h-12 pr-4 pl-12 rounded-xl focus:border-secondary/50"
+                  className="h-12 rounded-xl border-background/15 bg-background/5 pl-12 pr-4 text-background placeholder:text-background/30 focus:border-secondary/50"
                 />
                 <Button
                   size="icon"
                   variant="ghost"
-                  className="absolute left-1 top-1/2 -translate-y-1/2 h-10 w-10 bg-secondary text-secondary-foreground hover:bg-secondary/90 rounded-lg"
+                  className="absolute left-1 top-1/2 h-10 w-10 -translate-y-1/2 rounded-lg bg-secondary text-secondary-foreground hover:bg-secondary/90"
                 >
-                  <Send className="w-4 h-4" />
+                  <Send className="h-4 w-4" />
                 </Button>
               </div>
             </div>
@@ -118,53 +120,63 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Main Footer */}
       <div className="container mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
-          {/* Brand */}
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-5">
           <div className="lg:col-span-2">
-            <Link to="/" className="inline-block mb-6">
-              <img src={logo} alt="لبن الأصفور" className="h-14 brightness-0 invert opacity-80" />
+            <Link to="/" className="mb-6 inline-block">
+              <img src={logo} alt="لبن العصفور" className="h-14 brightness-0 invert opacity-85" />
             </Link>
-            <p className="text-background/40 mb-8 leading-relaxed max-w-sm text-sm">
-              لبن الأصفور للحلول المعمارية المتقدمة. نقدم أرقى قطع الأثاث والإضاءة
-              مع تجربة تسوق فريدة تدعم تقنية الواقع الافتراضي.
+            <p className="mb-8 max-w-md text-sm leading-8 text-background/42">
+              متجر مخصص للوحدات الخشبية ووحدات الإضاءة التي تُعرض كجزء من مشهد متكامل، مع تجربة VR
+              تساعدك على رؤية النتيجة قبل اعتماد الشراء.
             </p>
 
-            {/* Contact Info */}
+            <div className="mb-8 rounded-[1.5rem] border border-background/10 bg-background/5 p-5">
+              <div className="flex items-start gap-3">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-secondary/12">
+                  <ScanSearch className="h-5 w-5 text-secondary" />
+                </div>
+                <div>
+                  <p className="font-semibold text-background/88">ميزة المتجر الأساسية</p>
+                  <p className="mt-1 text-sm leading-7 text-background/46">
+                    تقليل التردد في قرار الشراء عبر معاينة الخشب والإضاءة داخل مساحة أقرب للواقع.
+                  </p>
+                </div>
+              </div>
+            </div>
+
             <div className="space-y-3">
               {[
-                { icon: MapPin, text: "الرياض، المملكة العربية السعودية" },
-                { icon: Phone, text: "+966 50 123 4567", dir: "ltr" as const },
-                { icon: Mail, text: "info@labanalasfour.com" },
+                { icon: MapPin, text: companyProfile.showroomCity },
+                { icon: Phone, text: companyProfile.phoneDisplay, dir: "ltr" as const },
+                { icon: Mail, text: companyProfile.email },
               ].map((item) => (
-                <div key={item.text} className="flex items-center gap-3 text-background/40 text-sm group hover:text-background/60 transition-colors">
-                  <item.icon className="w-4 h-4 text-secondary/60 flex-shrink-0 group-hover:text-secondary transition-colors" />
+                <div key={item.text} className="group flex items-center gap-3 text-sm text-background/42 transition-colors hover:text-background/60">
+                  <item.icon className="h-4 w-4 flex-shrink-0 text-secondary/60 transition-colors group-hover:text-secondary" />
                   <span dir={item.dir}>{item.text}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Links */}
           {[
             { title: "المنتجات", links: footerLinks.products },
-            { title: "الشركة", links: footerLinks.company },
+            { title: "المتجر", links: footerLinks.company },
             { title: "الدعم", links: footerLinks.support },
           ].map((section) => (
             <div key={section.title}>
-              <h4 className="font-display font-semibold text-sm mb-6 text-background/70 relative inline-block">
+              <h4 className="relative mb-6 inline-block font-display text-sm font-semibold text-background/72">
                 {section.title}
-                <span className="absolute -bottom-1 right-0 w-8 h-0.5 bg-secondary/40 rounded-full" />
+                <span className="absolute -bottom-1 right-0 h-0.5 w-8 rounded-full bg-secondary/40" />
               </h4>
               <ul className="space-y-3">
                 {section.links.map((link) => (
                   <li key={link.name}>
                     <Link
                       to={link.href}
-                      className="text-background/40 hover:text-secondary transition-colors duration-300 text-sm flex items-center gap-2 group"
+                      className="group flex items-center gap-2 text-sm text-background/42 transition-colors duration-300 hover:text-secondary"
                     >
-                      <span className="w-0 h-px bg-secondary group-hover:w-3 transition-all duration-300" />
+                      <span className="h-px w-0 bg-secondary transition-all duration-300 group-hover:w-3" />
                       {link.name}
                     </Link>
                   </li>
@@ -175,36 +187,33 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Bottom Bar */}
       <div className="border-t border-background/10">
         <div className="container mx-auto px-4 py-6">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-background/30 text-xs">
-              © {new Date().getFullYear()} لبن الأصفور. جميع الحقوق محفوظة.
+          <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+            <p className="text-xs text-background/30">
+              © {new Date().getFullYear()} لبن العصفور. جميع الحقوق محفوظة.
             </p>
 
-            {/* Social Links */}
             <div className="flex items-center gap-2">
               {socialLinks.map((social) => (
                 <a
                   key={social.label}
                   href={social.href}
                   aria-label={social.label}
-                  className="w-9 h-9 rounded-lg bg-background/5 flex items-center justify-center hover:bg-secondary hover:text-secondary-foreground transition-all duration-300 text-background/40 hover:shadow-gold"
+                  className="flex h-9 w-9 items-center justify-center rounded-lg bg-background/5 text-background/40 transition-all duration-300 hover:bg-secondary hover:text-secondary-foreground hover:shadow-gold"
                 >
-                  <social.icon className="w-4 h-4" />
+                  <social.icon className="h-4 w-4" />
                 </a>
               ))}
             </div>
 
-            {/* Back to Top */}
             <motion.button
               onClick={scrollToTop}
-              className="w-9 h-9 rounded-lg bg-secondary/10 border border-secondary/20 flex items-center justify-center text-secondary hover:bg-secondary hover:text-secondary-foreground transition-all duration-300"
+              className="flex h-9 w-9 items-center justify-center rounded-lg border border-secondary/20 bg-secondary/10 text-secondary transition-all duration-300 hover:bg-secondary hover:text-secondary-foreground"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
             >
-              <ArrowUp className="w-4 h-4" />
+              <ArrowUp className="h-4 w-4" />
             </motion.button>
           </div>
         </div>

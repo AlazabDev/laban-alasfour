@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -64,11 +64,7 @@ export default function CategoryPage() {
     return category || "";
   }, [location.pathname, category]);
 
-  useEffect(() => {
-    fetchData();
-  }, [currentSlug]);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       // Fetch categories
@@ -108,7 +104,11 @@ export default function CategoryPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentSlug]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const filteredProducts = useMemo(() => {
     return products

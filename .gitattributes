@@ -1,0 +1,11 @@
+*.glb binary
+*.usdz binary
+*.obj binary
+*.ifc binary
+*.3ds binary
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.webp binary
+*.svg text eol=lf
+*.json text eol=lf
