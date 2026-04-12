@@ -5,12 +5,8 @@ import { Star, Eye, Heart, ShoppingCart, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/contexts/CartContext";
+import { getProductPrimaryImage } from "@/lib/catalog-links";
 import type { Json } from "@/integrations/supabase/types";
-
-interface ProductImage {
-  url: string;
-  is_primary: boolean;
-}
 
 interface ProductCardProps {
   product: {
@@ -35,10 +31,7 @@ export function ProductCard({ product, index, viewMode }: ProductCardProps) {
   const { addItem } = useCart();
 
   const getProductImage = () => {
-    if (!product.images || !Array.isArray(product.images)) return "/placeholder.svg";
-    const images = product.images as unknown as ProductImage[];
-    const primaryImage = images.find((img) => img.is_primary);
-    return primaryImage?.url || images[0]?.url || "/placeholder.svg";
+    return getProductPrimaryImage(product.images, product.slug);
   };
 
   const discount = product.sale_price

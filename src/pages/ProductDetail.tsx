@@ -25,14 +25,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
+import { getCatalogModelUrl, getProductImageUrls } from "@/lib/catalog-links";
 import { toast } from "sonner";
 import { useCart } from "@/contexts/CartContext";
 import type { Json } from "@/integrations/supabase/types";
-
-interface ProductImage {
-  url: string;
-  is_primary: boolean;
-}
 
 interface Product {
   id: string;
@@ -110,12 +106,16 @@ export default function ProductDetail() {
   }, [fetchProduct]);
 
   const getImages = () => {
-    if (!product?.images || !Array.isArray(product.images)) return ["/placeholder.svg"];
-    const imgs = product.images as unknown as ProductImage[];
-    return imgs.map((img) => img.url);
+    if (!product) {
+      return ["/placeholder.svg"];
+    }
+
+    return getProductImageUrls(product.images, slug);
   };
 
   const images = getImages();
+  const resolvedModelUrl = getCatalogModelUrl(slug) || product?.model_3d_url || null;
+  const hasVrExperience = Boolean(product?.has_vr_experience || resolvedModelUrl);
 
   const getDimensions = (): { width?: number; height?: number; depth?: number } | null => {
     if (!product?.dimensions || typeof product.dimensions !== 'object' || Array.isArray(product.dimensions)) return null;
@@ -243,7 +243,7 @@ export default function ProductDetail() {
                       خصم {discountPercent}%
                     </Badge>
                   )}
-                  {product.has_vr_experience && (
+                  {hasVrExperience && (
                     <Badge className="bg-primary text-primary-foreground text-xs px-3 gap-1">
                       <Play className="h-3 w-3" /> VR
                     </Badge>
@@ -381,6 +381,24 @@ export default function ProductDetail() {
                         {color}
                       </button>
                     ))}
+                  </div>
+                </div>
+              )}
+
+              {resolvedModelUrl && (
+                <div className="rounded-2xl border border-secondary/20 bg-secondary/5 p-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-sm font-semibold text-foreground">ملف النموذج ثلاثي الأبعاد متاح</p>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        يتم تحميله مباشرة من المخزن السحابي العام عبر رابط مباشر.
+                      </p>
+                    </div>
+                    <a href={resolvedModelUrl} target="_blank" rel="noreferrer">
+                      <Button variant="outline" className="border-secondary/30 hover:border-secondary">
+                        فتح ملف 3D
+                      </Button>
+                    </a>
                   </div>
                 </div>
               )}

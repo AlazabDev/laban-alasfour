@@ -7,14 +7,10 @@ import { Badge } from "@/components/ui/badge";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
+import { getCatalogModelUrl, getProductPrimaryImage, hasCatalogModel } from "@/lib/catalog-links";
 import { Link } from "react-router-dom";
 import vrExperienceImage from "@/assets/vr-experience.jpg";
 import type { Json } from "@/integrations/supabase/types";
-
-interface ProductImage {
-  url: string;
-  is_primary: boolean;
-}
 
 interface VRProduct {
   id: string;
@@ -23,6 +19,7 @@ interface VRProduct {
   price: number;
   images: Json;
   model_3d_url: string | null;
+  has_vr_experience: boolean | null;
   slug: string;
 }
 
@@ -84,12 +81,15 @@ export default function VRExperiencePage() {
     try {
       const { data } = await supabase
         .from("products")
-        .select("id, name_ar, name_en, price, images, model_3d_url, slug")
-        .eq("has_vr_experience", true)
+        .select("id, name_ar, name_en, price, images, model_3d_url, has_vr_experience, slug")
         .eq("is_active", true)
-        .limit(8);
+        .limit(24);
 
-      setVRProducts(data || []);
+      const productsWithVR = (data || [])
+        .filter((product) => product.has_vr_experience || product.model_3d_url || hasCatalogModel(product.slug))
+        .slice(0, 8);
+
+      setVRProducts(productsWithVR);
     } catch (error) {
       console.error("Error fetching VR products:", error);
     } finally {
@@ -98,10 +98,7 @@ export default function VRExperiencePage() {
   };
 
   const getProductImage = (product: VRProduct) => {
-    if (!product.images || !Array.isArray(product.images)) return "/placeholder.svg";
-    const images = product.images as unknown as ProductImage[];
-    const primary = images.find((img) => img.is_primary);
-    return primary?.url || images[0]?.url || "/placeholder.svg";
+    return getProductPrimaryImage(product.images, product.slug);
   };
 
   return (
@@ -279,7 +276,11 @@ export default function VRExperiencePage() {
             </Link>
           </motion.div>
 
-          {vrProducts.length > 0 ? (
+          {loading ? (
+            <div className="text-center py-12 text-muted-foreground">
+              جاري تحميل منتجات VR...
+            </div>
+          ) : vrProducts.length > 0 ? (
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {vrProducts.map((product, index) => (
                 <motion.div
@@ -314,6 +315,9 @@ export default function VRExperiencePage() {
                           {product.name_ar}
                         </h3>
                         <p className="text-primary font-bold mt-2">{product.price} ر.س</p>
+                        {getCatalogModelUrl(product.slug) && (
+                          <p className="mt-2 text-xs text-muted-foreground">ملف 3D مباشر من المخزن السحابي</p>
+                        )}
                       </CardContent>
                     </Card>
                   </Link>
