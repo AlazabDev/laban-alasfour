@@ -35,6 +35,8 @@ export const env = {
   siteUrl: readOptionalEnv("VITE_SITE_URL", "http://localhost:8080"),
   assetBaseUrl: readOptionalEnv("VITE_ASSET_BASE_URL", "http://localhost:8080/assets/catalog"),
   enableAdmin: readBooleanEnv("VITE_ENABLE_ADMIN", false),
+  monitoringEnabled: readBooleanEnv("VITE_MONITORING_ENABLED", false),
+  monitoringEndpoint: readOptionalEnv("VITE_MONITORING_ENDPOINT", ""),
   contactPhoneDisplay: readOptionalEnv("VITE_CONTACT_PHONE_DISPLAY", "+966 50 123 4567"),
   contactPhoneRaw: readOptionalEnv("VITE_CONTACT_PHONE_RAW", "+966501234567"),
   contactWhatsappRaw: readOptionalEnv("VITE_CONTACT_WHATSAPP_RAW", "+966501234567"),

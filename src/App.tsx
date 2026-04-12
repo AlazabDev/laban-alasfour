@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "@/contexts/CartContext";
 import { CartDrawer } from "@/components/CartDrawer";
+import { RequireAdmin } from "@/components/RequireAdmin";
 import { CustomerAssistant } from "@/components/CustomerAssistant";
 import { env } from "@/lib/env";
 import Index from "./pages/Index";
@@ -56,7 +57,14 @@ const App = () => (
               <Route path="/checkout" element={<Checkout />} />
 
               {env.enableAdmin && (
-                <Route path="/admin" element={<AdminLayout />}>
+                <Route
+                  path="/admin"
+                  element={
+                    <RequireAdmin>
+                      <AdminLayout />
+                    </RequireAdmin>
+                  }
+                >
                   <Route index element={<Dashboard />} />
                   <Route path="products" element={<Products />} />
                   <Route path="products/new" element={<ProductForm />} />

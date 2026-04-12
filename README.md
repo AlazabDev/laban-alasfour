@@ -46,11 +46,14 @@ npm run check
 - `VITE_ASSET_BASE_URL`
 - `VITE_APP_ENV`
 - `VITE_ENABLE_ADMIN`
+- `VITE_MONITORING_ENABLED`
+- `VITE_MONITORING_ENDPOINT`
 
 ملاحظات:
 
 - مسار `/admin` معطّل افتراضياً. فعّله فقط عند الحاجة التشغيلية.
-- تفعيل لوحة الإدارة لا يساوي وجود حماية فعلية. إذا كان المطلوب فتحها في الإنتاج، يجب إضافة مصادقة وصلاحيات قبل ذلك.
+- عند تفعيل `/admin` أصبح الوصول يتطلب جلسة Supabase صالحة مع مستخدم يحمل دور `owner`.
+- مراقبة الأخطاء الأساسية تعمل عند تفعيل `VITE_MONITORING_ENABLED=true` وتحديد `VITE_MONITORING_ENDPOINT`.
 - لا تحفظ `.env` داخل Git. استخدم `.env.example` كمرجع فقط.
 - الأصول ثلاثية الأبعاد وصور الكتالوج يجب أن تُخزن في bucket/CDN خارجي واحد، لا داخل GitHub.
 
