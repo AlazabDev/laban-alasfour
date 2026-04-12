@@ -115,7 +115,7 @@ export function Hero() {
               initial={{ opacity: 0, y: 28 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.85 }}
-              className="mt-8 max-w-2xl text-base leading-8 text-primary-foreground/68 md:text-lg"
+              className="mt-8 max-w-2xl text-base leading-8 text-primary-foreground/82 md:text-lg"
             >
               نصمم تجربة شراء أوضح وأكثر ثقة: وحدات تلفاز، مكتبات، حلول تخزين، وطقم إضاءة
               متكامل يظهر لك قبل التنفيذ عبر VR، حتى ترى الخامة، توزيع الضوء، وحجم القطعة في
@@ -131,10 +131,10 @@ export function Hero() {
               {heroHighlights.map((item) => (
                 <div
                   key={item.label}
-                  className="rounded-2xl border border-primary-foreground/10 bg-primary-foreground/6 p-4 backdrop-blur-md"
+                  className="rounded-2xl border border-primary-foreground/16 bg-primary-foreground/10 p-4 backdrop-blur-md"
                 >
                   <item.icon className="mb-3 h-5 w-5 text-secondary" />
-                  <p className="text-sm leading-6 text-primary-foreground/78">{item.label}</p>
+                  <p className="text-sm leading-6 text-primary-foreground/88">{item.label}</p>
                 </div>
               ))}
             </motion.div>
@@ -171,33 +171,33 @@ export function Hero() {
             className="hidden lg:block"
           >
             <div className="relative mr-auto max-w-sm">
-              <div className="rounded-[2rem] border border-primary-foreground/10 bg-primary-foreground/7 p-6 backdrop-blur-xl">
+              <div className="rounded-[2rem] border border-primary-foreground/16 bg-primary-foreground/10 p-6 backdrop-blur-xl">
                 <div className="mb-6 flex items-center justify-between">
-                  <span className="text-xs tracking-[0.25em] text-primary-foreground/45">DESIGN SNAPSHOT</span>
-                  <span className="rounded-full bg-secondary/15 px-3 py-1 text-xs text-secondary">VR READY</span>
+                  <span className="text-xs tracking-[0.25em] text-primary-foreground/72">DESIGN SNAPSHOT</span>
+                  <span className="rounded-full bg-secondary/18 px-3 py-1 text-xs font-semibold text-secondary">VR READY</span>
                 </div>
 
                 <div className="space-y-5">
-                  <div className="rounded-2xl border border-primary-foreground/8 bg-black/10 p-5">
-                    <p className="text-xs uppercase tracking-[0.2em] text-primary-foreground/40">خامة مقترحة</p>
+                  <div className="rounded-2xl border border-primary-foreground/12 bg-black/15 p-5">
+                    <p className="text-xs uppercase tracking-[0.2em] text-primary-foreground/68">خامة مقترحة</p>
                     <p className="mt-2 font-display text-2xl text-primary-foreground">جوز طبيعي مع نحاس معتّق</p>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="rounded-2xl border border-primary-foreground/8 bg-black/10 p-4">
-                      <p className="text-xs text-primary-foreground/40">مستوى الإضاءة</p>
+                    <div className="rounded-2xl border border-primary-foreground/12 bg-black/15 p-4">
+                      <p className="text-xs text-primary-foreground/68">مستوى الإضاءة</p>
                       <p className="mt-2 text-2xl font-bold text-secondary">3000K</p>
-                      <p className="mt-1 text-xs text-primary-foreground/52">دفء بصري مثالي للخشب</p>
+                      <p className="mt-1 text-xs text-primary-foreground/76">دفء بصري مثالي للخشب</p>
                     </div>
-                    <div className="rounded-2xl border border-primary-foreground/8 bg-black/10 p-4">
-                      <p className="text-xs text-primary-foreground/40">زمن المعاينة</p>
+                    <div className="rounded-2xl border border-primary-foreground/12 bg-black/15 p-4">
+                      <p className="text-xs text-primary-foreground/68">زمن المعاينة</p>
                       <p className="mt-2 text-2xl font-bold text-secondary">5 دقائق</p>
-                      <p className="mt-1 text-xs text-primary-foreground/52">حتى ترى المشهد قبل الشراء</p>
+                      <p className="mt-1 text-xs text-primary-foreground/76">حتى ترى المشهد قبل الشراء</p>
                     </div>
                   </div>
 
-                  <div className="rounded-2xl border border-dashed border-secondary/30 bg-secondary/10 p-5">
-                    <p className="text-sm leading-7 text-primary-foreground/78">
+                  <div className="rounded-2xl border border-dashed border-secondary/35 bg-secondary/12 p-5">
+                    <p className="text-sm leading-7 text-primary-foreground/88">
                       نعرض لك القطعة داخل المشهد الحقيقي، مع إمكانية مقارنة الخامات ودرجات الضوء
                       قبل اتخاذ القرار.
                     </p>

@@ -1,0 +1,71 @@
+import { mkdir, writeFile } from "node:fs/promises";
+import path from "node:path";
+import process from "node:process";
+
+const fallbackBaseUrl = "https://laban-alasfour.s3.amazonaws.com/catalog";
+const baseUrl = (process.env.VITE_ASSET_BASE_URL || process.argv[2] || fallbackBaseUrl).replace(/\/+$/, "");
+const outputPath = path.resolve("src/generated/catalog-links.ts");
+
+function toAssetUrl(slug, relativePath) {
+  if (!relativePath) {
+    return null;
+  }
+
+  return `${baseUrl}/${slug}/${String(relativePath).replace(/^\/+/, "")}`;
+}
+
+function toEntry(product) {
+  const gallery = Array.isArray(product.images?.gallery)
+    ? product.images.gallery.map((item) => toAssetUrl(product.slug, item)).filter(Boolean)
+    : [];
+
+  const colors = Object.fromEntries(
+    Object.entries(product.images?.colors || {})
+      .map(([key, value]) => [key, toAssetUrl(product.slug, value)])
+      .filter(([, value]) => Boolean(value)),
+  );
+
+  return {
+    title: product.title || product.slug,
+    productUrl: `${baseUrl}/${product.slug}/${product.slug}.json`,
+    primaryImageUrl: toAssetUrl(product.slug, product.images?.primary),
+    galleryImageUrls: gallery,
+    colorImageUrls: colors,
+    modelUrl: toAssetUrl(product.slug, product.glb),
+  };
+}
+
+async function main() {
+  const response = await fetch(`${baseUrl}/products-index.json`);
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch catalog index: ${response.status} ${response.statusText}`);
+  }
+
+  const catalog = await response.json();
+  const entries = Object.fromEntries(
+    (catalog.products || []).map((product) => [product.slug, toEntry(product)]),
+  );
+
+  const fileContent = `export type CatalogLinkEntry = {
+  title: string;
+  productUrl: string;
+  primaryImageUrl: string | null;
+  galleryImageUrls: string[];
+  colorImageUrls: Record<string, string>;
+  modelUrl: string | null;
+};
+
+export const catalogLinks: Record<string, CatalogLinkEntry> = ${JSON.stringify(entries, null, 2)};
+`;
+
+  await mkdir(path.dirname(outputPath), { recursive: true });
+  await writeFile(outputPath, fileContent, "utf8");
+
+  console.log(`Generated ${Object.keys(entries).length} catalog link entries at ${outputPath}`);
+}
+
+main().catch((error) => {
+  console.error(error instanceof Error ? error.message : String(error));
+  process.exit(1);
+});

@@ -17,6 +17,7 @@ dist-ssr
 coverage
 data/vr/
 public/assets/catalog/
+supabase/.temp/
 
 # Editor directories and files
 .vscode/*
