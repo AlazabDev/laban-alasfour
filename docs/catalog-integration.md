@@ -39,3 +39,4 @@ Notes:
 - The storefront should treat the bucket as the single source of truth for catalog assets.
 - Keep heavy catalog files out of GitHub and sync them to the bucket from your local asset pipeline.
 - `upload-manifest.json` can still be used later as the source manifest for upload automation.
+- Catalog file and folder names should remain lowercase and use `-` instead of spaces. You can verify this locally with `npm run catalog:names`.
