@@ -158,9 +158,9 @@ export default function VRExperiencePage() {
               { value: "4.9", label: "تقييم المستخدمين" },
               { value: "360°", label: "زاوية مشاهدة" },
             ].map((stat, index) => (
-              <div key={index} className="bg-card/50 backdrop-blur-sm rounded-xl p-6 border border-border">
+              <div key={index} className="bg-primary-foreground/10 backdrop-blur-sm rounded-xl p-6 border border-primary-foreground/15">
                 <div className="text-3xl md:text-4xl font-bold text-secondary mb-1">{stat.value}</div>
-                <div className="text-sm text-muted-foreground">{stat.label}</div>
+                <div className="text-sm text-primary-foreground/65">{stat.label}</div>
               </div>
             ))}
           </motion.div>
