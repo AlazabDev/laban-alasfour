@@ -210,7 +210,7 @@ export default function VRExperiencePage() {
       </section>
 
       {/* How It Works */}
-      <section className="py-20">
+      <section className="py-20" dir="rtl">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -236,11 +236,11 @@ export default function VRExperiencePage() {
                 transition={{ delay: index * 0.1 }}
                 className="relative"
               >
-                <div className="text-7xl font-bold text-primary/10 absolute -top-4 right-0">
+                <div className="text-7xl font-bold text-secondary/15 absolute -top-4 right-0">
                   {step.number}
                 </div>
                 <div className="relative pt-8">
-                  <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
+                  <h3 className="text-xl font-semibold text-foreground mb-2">{step.title}</h3>
                   <p className="text-muted-foreground">{step.description}</p>
                 </div>
                 {index < steps.length - 1 && (
