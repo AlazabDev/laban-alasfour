@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Play, Pause, RotateCcw, Maximize2, Eye, Box, Smartphone, Monitor, ChevronRight } from "lucide-react";
+import { Play, Pause, RotateCcw, Maximize2, Eye, Box, Smartphone, Monitor, ChevronRight, View } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { ModelViewer } from "@/components/ModelViewer";
 import { supabase } from "@/integrations/supabase/client";
 import { getCatalogModelUrl, getProductPrimaryImage, hasCatalogModel } from "@/lib/catalog-links";
 import { Link } from "react-router-dom";
@@ -168,7 +169,7 @@ export default function VRExperiencePage() {
       </section>
 
       {/* Features */}
-      <section className="py-20 bg-muted/30">
+      <section className="py-20 bg-muted/30" dir="rtl">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -193,12 +194,12 @@ export default function VRExperiencePage() {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
               >
-                <Card className="h-full hover:border-primary/50 transition-colors">
+                <Card className="h-full hover:border-secondary/40 transition-colors">
                   <CardContent className="p-6 text-center">
-                    <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-primary/10 flex items-center justify-center">
-                      <feature.icon className="h-8 w-8 text-primary" />
+                    <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-secondary/10 flex items-center justify-center">
+                      <feature.icon className="h-8 w-8 text-secondary" />
                     </div>
-                    <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+                    <h3 className="text-xl font-semibold text-foreground mb-2">{feature.title}</h3>
                     <p className="text-muted-foreground">{feature.description}</p>
                   </CardContent>
                 </Card>
