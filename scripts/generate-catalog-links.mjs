@@ -4,7 +4,8 @@ import process from "node:process";
 
 const fallbackBaseUrl = "https://laban-alasfour.s3.amazonaws.com/catalog";
 const baseUrl = (process.env.VITE_ASSET_BASE_URL || process.argv[2] || fallbackBaseUrl).replace(/\/+$/, "");
-const outputPath = path.resolve("src/generated/catalog-links.ts");
+const tsOutputPath = path.resolve("src/generated/catalog-links.ts");
+const jsonOutputPath = path.resolve("public/catalog-asset-links.json");
 
 function toAssetUrl(slug, relativePath) {
   if (!relativePath) {
@@ -46,8 +47,19 @@ async function main() {
   const entries = Object.fromEntries(
     (catalog.products || []).map((product) => [product.slug, toEntry(product)]),
   );
+  const allAssetUrls = Array.from(
+    new Set(
+      Object.values(entries).flatMap((entry) => [
+        entry.productUrl,
+        entry.primaryImageUrl,
+        entry.modelUrl,
+        ...entry.galleryImageUrls,
+        ...Object.values(entry.colorImageUrls),
+      ].filter(Boolean)),
+    ),
+  );
 
-  const fileContent = `export type CatalogLinkEntry = {
+  const tsFileContent = `export type CatalogLinkEntry = {
   title: string;
   productUrl: string;
   primaryImageUrl: string | null;
@@ -58,11 +70,22 @@ async function main() {
 
 export const catalogLinks: Record<string, CatalogLinkEntry> = ${JSON.stringify(entries, null, 2)};
 `;
+  const jsonFileContent = JSON.stringify({
+    generatedAt: new Date().toISOString(),
+    baseUrl,
+    productCount: Object.keys(entries).length,
+    assetCount: allAssetUrls.length,
+    allAssetUrls,
+    assetsBySlug: entries,
+  }, null, 2);
 
-  await mkdir(path.dirname(outputPath), { recursive: true });
-  await writeFile(outputPath, fileContent, "utf8");
+  await mkdir(path.dirname(tsOutputPath), { recursive: true });
+  await mkdir(path.dirname(jsonOutputPath), { recursive: true });
+  await writeFile(tsOutputPath, tsFileContent, "utf8");
+  await writeFile(jsonOutputPath, jsonFileContent, "utf8");
 
-  console.log(`Generated ${Object.keys(entries).length} catalog link entries at ${outputPath}`);
+  console.log(`Generated ${Object.keys(entries).length} catalog link entries at ${tsOutputPath}`);
+  console.log(`Generated ${allAssetUrls.length} asset URLs at ${jsonOutputPath}`);
 }
 
 main().catch((error) => {
