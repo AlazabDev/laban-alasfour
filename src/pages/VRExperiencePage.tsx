@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Play, Pause, RotateCcw, Maximize2, Eye, Box, Smartphone, Monitor, ChevronRight } from "lucide-react";
+import { Play, Pause, RotateCcw, Maximize2, Eye, Box, Smartphone, Monitor, ChevronRight, View } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { ModelViewer } from "@/components/ModelViewer";
 import { supabase } from "@/integrations/supabase/client";
 import { getCatalogModelUrl, getProductPrimaryImage, hasCatalogModel } from "@/lib/catalog-links";
 import { Link } from "react-router-dom";
@@ -114,11 +115,11 @@ export default function VRExperiencePage() {
             alt="VR Experience"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,28,40,0.85)_0%,rgba(18,28,40,0.7)_50%,rgba(18,28,40,0.92)_100%)]" />
         </div>
 
         {/* Content */}
-        <div className="relative z-10 container mx-auto px-4 text-center pt-20">
+        <div className="relative z-10 container mx-auto px-4 text-center pt-20" dir="rtl">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -127,10 +128,10 @@ export default function VRExperiencePage() {
             <Badge className="mb-6 bg-secondary/20 text-secondary border-secondary/30">
               تقنية حصرية
             </Badge>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground mb-6">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-primary-foreground mb-6">
               تجربة الواقع الافتراضي
             </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-10">
+            <p className="text-xl md:text-2xl text-primary-foreground/70 max-w-3xl mx-auto mb-10">
               استكشف الأثاث بتقنية ثلاثية الأبعاد متطورة واستمتع بتجربة تسوق غامرة تجعلك ترى المنتج كما لو كان أمامك
             </p>
 
@@ -158,9 +159,9 @@ export default function VRExperiencePage() {
               { value: "4.9", label: "تقييم المستخدمين" },
               { value: "360°", label: "زاوية مشاهدة" },
             ].map((stat, index) => (
-              <div key={index} className="bg-card/50 backdrop-blur-sm rounded-xl p-6 border border-border">
+              <div key={index} className="bg-primary-foreground/10 backdrop-blur-sm rounded-xl p-6 border border-primary-foreground/15">
                 <div className="text-3xl md:text-4xl font-bold text-secondary mb-1">{stat.value}</div>
-                <div className="text-sm text-muted-foreground">{stat.label}</div>
+                <div className="text-sm text-primary-foreground/65">{stat.label}</div>
               </div>
             ))}
           </motion.div>
@@ -168,7 +169,7 @@ export default function VRExperiencePage() {
       </section>
 
       {/* Features */}
-      <section className="py-20 bg-muted/30">
+      <section className="py-20 bg-muted/30" dir="rtl">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -193,12 +194,12 @@ export default function VRExperiencePage() {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
               >
-                <Card className="h-full hover:border-primary/50 transition-colors">
+                <Card className="h-full hover:border-secondary/40 transition-colors">
                   <CardContent className="p-6 text-center">
-                    <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-primary/10 flex items-center justify-center">
-                      <feature.icon className="h-8 w-8 text-primary" />
+                    <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-secondary/10 flex items-center justify-center">
+                      <feature.icon className="h-8 w-8 text-secondary" />
                     </div>
-                    <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+                    <h3 className="text-xl font-semibold text-foreground mb-2">{feature.title}</h3>
                     <p className="text-muted-foreground">{feature.description}</p>
                   </CardContent>
                 </Card>
@@ -209,7 +210,7 @@ export default function VRExperiencePage() {
       </section>
 
       {/* How It Works */}
-      <section className="py-20">
+      <section className="py-20" dir="rtl">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -235,11 +236,11 @@ export default function VRExperiencePage() {
                 transition={{ delay: index * 0.1 }}
                 className="relative"
               >
-                <div className="text-7xl font-bold text-primary/10 absolute -top-4 right-0">
+                <div className="text-7xl font-bold text-secondary/15 absolute -top-4 right-0">
                   {step.number}
                 </div>
                 <div className="relative pt-8">
-                  <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
+                  <h3 className="text-xl font-semibold text-foreground mb-2">{step.title}</h3>
                   <p className="text-muted-foreground">{step.description}</p>
                 </div>
                 {index < steps.length - 1 && (
@@ -252,7 +253,7 @@ export default function VRExperiencePage() {
       </section>
 
       {/* VR Products */}
-      <section className="py-20 bg-muted/30">
+      <section className="py-20 bg-muted/30" dir="rtl">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -276,53 +277,100 @@ export default function VRExperiencePage() {
             </Link>
           </motion.div>
 
+          {/* Featured 3D Model Viewer */}
+          {vrProducts.length > 0 && getCatalogModelUrl(vrProducts[0].slug) && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mb-12"
+            >
+              <div className="grid lg:grid-cols-[1.2fr_0.8fr] gap-6">
+                <ModelViewer
+                  modelUrl={getCatalogModelUrl(vrProducts[0].slug)!}
+                  className="aspect-[4/3] lg:aspect-auto lg:min-h-[450px]"
+                />
+                <div className="flex flex-col justify-center p-6 rounded-2xl border border-border/50 bg-card">
+                  <Badge variant="vr" className="w-fit mb-4 gap-1">
+                    <View className="h-3 w-3" /> عرض ثلاثي الأبعاد مباشر
+                  </Badge>
+                  <h3 className="text-2xl font-bold text-foreground mb-3">{vrProducts[0].name_ar}</h3>
+                  <p className="text-muted-foreground leading-7 mb-6">
+                    قم بتدوير النموذج، تكبيره، ومشاهدته من جميع الزوايا. استخدم الماوس أو إصبعك للتحكم بالعرض.
+                  </p>
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl font-bold text-secondary">{vrProducts[0].price.toLocaleString()} ر.س</span>
+                  </div>
+                  <div className="mt-6 flex flex-wrap gap-3">
+                    <Link to={`/product/${vrProducts[0].slug}`}>
+                      <Button variant="secondary" className="gap-2">
+                        <Eye className="h-4 w-4" />
+                        تفاصيل المنتج
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
           {loading ? (
             <div className="text-center py-12 text-muted-foreground">
               جاري تحميل منتجات VR...
             </div>
           ) : vrProducts.length > 0 ? (
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {vrProducts.map((product, index) => (
-                <motion.div
-                  key={product.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.05 }}
-                >
-                  <Link to={`/product/${product.slug}`}>
-                    <Card className="group overflow-hidden hover:border-primary/50 transition-all duration-300">
-                      <div className="relative aspect-square overflow-hidden">
-                        <img
-                          src={getProductImage(product)}
-                          alt={product.name_ar}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                        />
-                        <Badge className="absolute top-3 right-3 bg-primary text-primary-foreground gap-1">
-                          <Box className="h-3 w-3" /> VR
-                        </Badge>
+              {vrProducts.map((product, index) => {
+                const modelUrl = getCatalogModelUrl(product.slug);
+                return (
+                  <motion.div
+                    key={product.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.05 }}
+                  >
+                    <Link to={`/product/${product.slug}`}>
+                      <Card className="group overflow-hidden hover:border-secondary/40 transition-all duration-300">
+                        <div className="relative aspect-square overflow-hidden">
+                          <img
+                            src={getProductImage(product)}
+                            alt={product.name_ar}
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          />
+                          <div className="absolute top-3 right-3 flex flex-col gap-1.5">
+                            <Badge variant="vr" className="gap-1">
+                              <Box className="h-3 w-3" /> VR
+                            </Badge>
+                            {modelUrl && (
+                              <Badge className="bg-secondary/90 text-secondary-foreground gap-1 text-[10px]">
+                                3D مباشر
+                              </Badge>
+                            )}
+                          </div>
 
-                        {/* VR Button Overlay */}
-                        <div className="absolute inset-0 bg-background/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                          <Button className="gap-2">
-                            <Play className="h-4 w-4" />
-                            تجربة VR
-                          </Button>
+                          {/* VR Button Overlay */}
+                          <div className="absolute inset-0 bg-foreground/70 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
+                            <Button variant="secondary" className="gap-2">
+                              <Play className="h-4 w-4" />
+                              تجربة VR
+                            </Button>
+                          </div>
                         </div>
-                      </div>
-                      <CardContent className="p-4">
-                        <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-1">
-                          {product.name_ar}
-                        </h3>
-                        <p className="text-primary font-bold mt-2">{product.price} ر.س</p>
-                        {getCatalogModelUrl(product.slug) && (
-                          <p className="mt-2 text-xs text-muted-foreground">ملف 3D مباشر من المخزن السحابي</p>
-                        )}
-                      </CardContent>
-                    </Card>
-                  </Link>
-                </motion.div>
-              ))}
+                        <CardContent className="p-4">
+                          <h3 className="font-semibold text-foreground group-hover:text-secondary transition-colors line-clamp-1">
+                            {product.name_ar}
+                          </h3>
+                          <p className="text-secondary font-bold mt-2">{product.price.toLocaleString()} ر.س</p>
+                          {modelUrl && (
+                            <p className="mt-2 text-xs text-muted-foreground">ملف 3D مباشر من المخزن السحابي</p>
+                          )}
+                        </CardContent>
+                      </Card>
+                    </Link>
+                  </motion.div>
+                );
+              })}
             </div>
           ) : (
             <div className="text-center py-12 text-muted-foreground">

@@ -9,25 +9,25 @@
 @layer base {
   :root {
     /* Brand Colors - Derived from logo */
-    --background: 40 20% 98%;
-    --foreground: 220 25% 12%;
+    --background: 40 30% 97%;
+    --foreground: 220 30% 10%;
 
     --card: 0 0% 100%;
-    --card-foreground: 220 25% 12%;
+    --card-foreground: 220 30% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 25% 12%;
+    --popover-foreground: 220 30% 10%;
 
     /* Navy Blue - Primary brand color */
     --primary: 215 55% 22%;
-    --primary-foreground: 40 20% 98%;
+    --primary-foreground: 40 30% 97%;
 
     /* Golden Amber - Accent color from bird */
     --secondary: 42 85% 50%;
-    --secondary-foreground: 220 25% 12%;
+    --secondary-foreground: 220 30% 10%;
 
-    --muted: 40 15% 94%;
-    --muted-foreground: 220 10% 45%;
+    --muted: 40 18% 93%;
+    --muted-foreground: 220 12% 40%;
 
     /* Gold accent for highlights */
     --accent: 42 85% 50%;
