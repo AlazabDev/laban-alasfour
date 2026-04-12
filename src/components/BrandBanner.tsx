@@ -26,7 +26,7 @@ const features = [
 
 export function BrandBanner() {
   return (
-    <section className="border-y border-border/40 bg-[linear-gradient(180deg,rgba(250,248,243,1)_0%,rgba(245,241,234,1)_100%)] py-16" dir="rtl">
+    <section className="border-y border-border/40 bg-muted/40 py-16" dir="rtl">
       <div className="container mx-auto px-4">
         <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
