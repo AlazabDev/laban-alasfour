@@ -114,11 +114,11 @@ export default function VRExperiencePage() {
             alt="VR Experience"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,28,40,0.85)_0%,rgba(18,28,40,0.7)_50%,rgba(18,28,40,0.92)_100%)]" />
         </div>
 
         {/* Content */}
-        <div className="relative z-10 container mx-auto px-4 text-center pt-20">
+        <div className="relative z-10 container mx-auto px-4 text-center pt-20" dir="rtl">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -127,10 +127,10 @@ export default function VRExperiencePage() {
             <Badge className="mb-6 bg-secondary/20 text-secondary border-secondary/30">
               تقنية حصرية
             </Badge>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground mb-6">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-primary-foreground mb-6">
               تجربة الواقع الافتراضي
             </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-10">
+            <p className="text-xl md:text-2xl text-primary-foreground/70 max-w-3xl mx-auto mb-10">
               استكشف الأثاث بتقنية ثلاثية الأبعاد متطورة واستمتع بتجربة تسوق غامرة تجعلك ترى المنتج كما لو كان أمامك
             </p>
 
