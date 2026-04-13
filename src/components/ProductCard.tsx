@@ -5,7 +5,7 @@ import { Star, Eye, Heart, ShoppingCart, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/contexts/CartContext";
-import { getProductPrimaryImage } from "@/lib/catalog-links";
+import { getCatalogSearchMetadata, getProductPrimaryImage, hasCatalogModel } from "@/lib/catalog-links";
 import type { Json } from "@/integrations/supabase/types";
 
 interface ProductCardProps {
@@ -29,6 +29,9 @@ export function ProductCard({ product, index, viewMode }: ProductCardProps) {
   const [isLiked, setIsLiked] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const { addItem } = useCart();
+  const catalogMeta = getCatalogSearchMetadata(product.slug);
+  const supportsImmersivePreview = product.has_vr_experience || hasCatalogModel(product.slug);
+  const catalogAssetCount = catalogMeta?.assetCount ?? 0;
 
   const getProductImage = () => {
     return getProductPrimaryImage(product.images, product.slug);
@@ -71,6 +74,7 @@ export function ProductCard({ product, index, viewMode }: ProductCardProps) {
               <img
                 src={getProductImage()}
                 alt={product.name_ar}
+                loading="lazy"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 onLoad={() => setImageLoaded(true)}
               />
@@ -99,6 +103,26 @@ export function ProductCard({ product, index, viewMode }: ProductCardProps) {
                   </Button>
                 </div>
                 <p className="text-sm text-muted-foreground line-clamp-1">{product.name_en}</p>
+                {(catalogMeta || supportsImmersivePreview) && (
+                  <div className="mt-3 flex flex-wrap items-center gap-2">
+                    {catalogMeta?.displayCode && (
+                      <Badge variant="outline" className="border-secondary/20 bg-secondary/10 text-secondary">
+                        {catalogMeta.displayCode}
+                      </Badge>
+                    )}
+                    {catalogAssetCount > 0 && (
+                      <Badge variant="outline" className="border-border/60 bg-muted/60 text-foreground">
+                        {catalogAssetCount} ملف كتالوج
+                      </Badge>
+                    )}
+                    {supportsImmersivePreview && (
+                      <Badge variant="vr" className="gap-1">
+                        <Eye className="h-3 w-3" />
+                        VR / 3D
+                      </Badge>
+                    )}
+                  </div>
+                )}
                 {product.rating_average && (
                   <div className="flex items-center gap-1.5 mt-3">
                     {[...Array(5)].map((_, i) => (
@@ -150,6 +174,7 @@ export function ProductCard({ product, index, viewMode }: ProductCardProps) {
             <img
               src={getProductImage()}
               alt={product.name_ar}
+              loading="lazy"
               className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-110 ${imageLoaded ? "opacity-100" : "opacity-0"}`}
               onLoad={() => setImageLoaded(true)}
             />
@@ -165,9 +190,15 @@ export function ProductCard({ product, index, viewMode }: ProductCardProps) {
                   جديد
                 </Badge>
               )}
-              {product.has_vr_experience && (
+              {supportsImmersivePreview && (
                 <Badge variant="outline" className="bg-card/90 backdrop-blur-md border-secondary/30 text-foreground font-medium shadow-lg">
-                  🥽 VR
+                  <Eye className="h-3 w-3" />
+                  VR / 3D
+                </Badge>
+              )}
+              {catalogMeta?.hasModel && (
+                <Badge variant="outline" className="border-border/50 bg-card/90 text-foreground font-medium shadow-lg backdrop-blur-md">
+                  3D مباشر
                 </Badge>
               )}
               {discount > 0 && (
@@ -227,6 +258,21 @@ export function ProductCard({ product, index, viewMode }: ProductCardProps) {
             <h3 className="font-display font-semibold text-foreground group-hover:text-secondary transition-colors duration-300 line-clamp-2 leading-relaxed">
               {product.name_ar}
             </h3>
+            <p className="text-xs text-muted-foreground line-clamp-1">{product.name_en}</p>
+            {(catalogMeta || supportsImmersivePreview) && (
+              <div className="flex flex-wrap items-center gap-2 pt-1">
+                {catalogMeta?.displayCode && (
+                  <span className="rounded-full bg-muted px-2.5 py-1 text-[11px] font-semibold text-foreground/80">
+                    {catalogMeta.displayCode}
+                  </span>
+                )}
+                {catalogAssetCount > 0 && (
+                  <span className="rounded-full bg-secondary/10 px-2.5 py-1 text-[11px] font-semibold text-secondary">
+                    {catalogAssetCount} ملف
+                  </span>
+                )}
+              </div>
+            )}
 
             {/* Price */}
             <div className="flex items-baseline gap-2 pt-1">
