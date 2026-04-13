@@ -131,7 +131,7 @@ export default function VRExperiencePage() {
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-primary-foreground mb-6">
               تجربة الواقع الافتراضي
             </h1>
-            <p className="text-xl md:text-2xl text-primary-foreground/70 max-w-3xl mx-auto mb-10">
+            <p className="text-xl md:text-2xl text-primary-foreground/84 max-w-3xl mx-auto mb-10">
               استكشف الأثاث بتقنية ثلاثية الأبعاد متطورة واستمتع بتجربة تسوق غامرة تجعلك ترى المنتج كما لو كان أمامك
             </p>
 
@@ -161,7 +161,7 @@ export default function VRExperiencePage() {
             ].map((stat, index) => (
               <div key={index} className="bg-primary-foreground/10 backdrop-blur-sm rounded-xl p-6 border border-primary-foreground/15">
                 <div className="text-3xl md:text-4xl font-bold text-secondary mb-1">{stat.value}</div>
-                <div className="text-sm text-primary-foreground/65">{stat.label}</div>
+                <div className="text-sm text-primary-foreground/82">{stat.label}</div>
               </div>
             ))}
           </motion.div>
